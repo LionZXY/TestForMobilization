@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">YandexMusic</string>
+    <string name="notfoundimage">NotFoundMusicImage</string>
+</resources>

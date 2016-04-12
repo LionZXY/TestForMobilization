@@ -1,0 +1,36 @@
+package ru.lionzxy.yandexmusic;
+
+import android.graphics.BitmapFactory;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import ru.lionzxy.yandexmusic.elements.AuthorObject;
+import ru.lionzxy.yandexmusic.helper.AuthorRecyclerAdapter;
+
+public class MusicList extends AppCompatActivity {
+    private RecyclerView mRecyclerView;
+    private AuthorRecyclerAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_music_list);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        // Setting the LayoutManager.
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // Setting the adapter.
+        mAdapter = new AuthorRecyclerAdapter();
+        mRecyclerView.setAdapter(mAdapter);
+
+        mAdapter.addItem(new AuthorObject("Tove Lo", "шведская певица и автор песен. Она привлекла к себе внимание в 2013 году с выпуском сингла «Habits», но настоящего успеха добилась с ремиксом хип-хоп продюсера Hippie Sabotage на эту песню, который получил название «Stay High». 4 марта 2014 года вышел её дебютный мини-альбом Truth Serum, а 24 сентября этого же года дебютный студийный альбом Queen of the Clouds. Туве Лу является автором песен таких артистов, как Icona Pop, Girls Aloud и Шер Ллойд.", BitmapFactory.decodeResource(getResources(), R.drawable.testcover)));
+        mAdapter.addItem(new AuthorObject("Ne-Yo", "обладатель трёх премии Грэмми, американский певец, автор песен, продюсер, актёр, филантроп. В 2009 году журнал Billboard поставил Ни-Йо на 57 место в рейтинге «Артисты десятилетия».", BitmapFactory.decodeResource(getResources(), R.drawable.notfoundmusic)));
+    }
+}
