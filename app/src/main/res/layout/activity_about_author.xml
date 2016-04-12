@@ -1,44 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
-    <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_view"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            card_view:cardCornerRadius="4dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-            <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:id="@+id/imageView"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:scaleType="fitCenter" android:src="@drawable/notfoundmusic" android:background="#00ffffff"
-                    android:padding="8dp" android:contentDescription="@string/notfoundimage"/>
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        card_view:cardCornerRadius="4dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="#00ffffff"
+            android:contentDescription="@string/notfoundimage"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/notfoundmusic" />
+
+        <TextView
+            android:id="@+id/head_author"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:paddingLeft="200dp"
+            android:paddingTop="6dp"
+            android:text="Tove Lo"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <RelativeLayout
+            android:id="@+id/link_layout"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="30dp"
+            android:paddingLeft="200dp">
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="1dp"
+                android:layout_marginTop="2dp"
+                android:layout_height="20dp"
+                android:background="#414141" />
 
             <TextView
-                    android:id="@+id/head_author"
-                    android:layout_width="match_parent"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:layout_height="match_parent"
-                    android:text="Tove Lo"
-                    android:paddingLeft="100dp"
-                    android:maxLines="1" android:textColor="#000000"
-                    android:textSize="20sp" android:paddingTop="6dp"/>
+                android:id="@+id/link_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_toRightOf="@id/line"
+                android:layout_marginLeft="5dp"
+                android:text="link"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="20sp" />
+        </RelativeLayout>
+        >
+
+
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/description"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="60dp"
+            android:paddingLeft="8dp"
             android:text="Шведская певица и автор песен. Она привлекла к себе внимание в 2013 году с выпуском сингла «Habits», но настоящего успеха добилась с ремиксом хип-хоп продюсера Hippie Sabotage на эту песню, который получил название «Stay High». 4 марта 2014 года вышел её дебютный мини-альбом Truth Serum, а 24 сентября этого же года дебютный студийный альбом Queen of the Clouds. Туве Лу является автором песен таких артистов, как Icona Pop, Girls Aloud и Шер Ллойд."
-            android:id="@+id/description" android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:layout_marginLeft="100dp"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="30dp" android:textSize="15dp"/>
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="15sp" />
 
 
     </android.support.v7.widget.CardView>
