@@ -12,12 +12,13 @@ public class MusicList extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private AuthorRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    public static AuthorObject unknowObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_list);
-
+        unknowObject = new AuthorObject("Неизвестный автор", "Если вы видете это сообщение, значит произошла ошибка в программе. Пожалуйста сообщите об этом разработчику",  BitmapFactory.decodeResource(getResources(), R.drawable.notfoundmusic));
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
 
         mRecyclerView.setHasFixedSize(true);
@@ -27,7 +28,7 @@ public class MusicList extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // Setting the adapter.
-        mAdapter = new AuthorRecyclerAdapter();
+        mAdapter = new AuthorRecyclerAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
         mAdapter.addItem(new AuthorObject("Tove Lo", "шведская певица и автор песен. Она привлекла к себе внимание в 2013 году с выпуском сингла «Habits», но настоящего успеха добилась с ремиксом хип-хоп продюсера Hippie Sabotage на эту песню, который получил название «Stay High». 4 марта 2014 года вышел её дебютный мини-альбом Truth Serum, а 24 сентября этого же года дебютный студийный альбом Queen of the Clouds. Туве Лу является автором песен таких артистов, как Icona Pop, Girls Aloud и Шер Ллойд.", BitmapFactory.decodeResource(getResources(), R.drawable.testcover)));
