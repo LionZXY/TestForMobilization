@@ -1,79 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <ScrollView
-        android:layout_gravity="start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            card_view:cardCornerRadius="4dp">
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="vertical">
 
-
-            <RelativeLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="4dp">
+                android:layout_marginTop="10dp">
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="180dp"
-                    android:layout_height="180dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:background="#00ffffff"
-                    android:contentDescription="@string/notfoundimage"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/notfoundmusic" />
-
-                <TextView
-                    android:id="@+id/head_author"
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/card_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/imageView"
-                    android:ellipsize="marquee"
-                    android:maxLines="1"
-                    android:paddingTop="6dp"
-                    android:text="Tove Lo"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="#000000"
-                    android:textSize="30sp" />
+                    android:layout_gravity="center"
+                    android:background="#ffffff">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp">
+
+                        <TextView
+                            android:id="@+id/head_author"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="marquee"
+                            android:maxLines="1"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="6dp"
+                            android:text="Tove Lo"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="#000000"
+                            android:textSize="50sp" />
+
+                        <FrameLayout
+                            android:id="@+id/frameLayoutImage"
+                            android:layout_width="200dp"
+                            android:layout_height="240dp"
+                            android:paddingLeft="9dp"
+                            android:paddingTop="75dp">
+
+                            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                android:id="@+id/cardViewImage"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                card_view:cardBackgroundColor="#BFBFBF">
+
+                                <ImageView
+                                    android:id="@+id/imageView"
+                                    android:layout_width="180dp"
+                                    android:layout_height="180dp"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentStart="true"
+                                    android:contentDescription="@string/notfoundimage"
+                                    android:padding="0dp"
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/notfoundmusic" />
+                            </android.support.v7.widget.CardView>
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@id/frameLayoutImage"
+                            android:gravity="left"
+                            android:paddingTop="80dp"
+                            android:text="Треков:"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textSize="20sp" />
 
 
-                <TextView
-                    android:id="@+id/description"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@id/frameLayoutImage"
+                            android:gravity="left"
+                            android:maxLength="5"
+                            android:maxLines="1"
+                            android:paddingTop="95dp"
+                            android:text="81"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textSize="50sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@id/frameLayoutImage"
+                            android:gravity="left"
+                            android:paddingTop="170dp"
+                            android:text="Альбомов:"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textSize="20sp" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@id/frameLayoutImage"
+                            android:gravity="left"
+                            android:maxLength="5"
+                            android:maxLines="1"
+                            android:paddingTop="185dp"
+                            android:text="22"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textSize="50sp" />
+
+                        <TextView
+                            android:id="@+id/description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="270dp"
+                            android:breakStrategy="high_quality"
+                            android:lineSpacingExtra="3.5sp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Шведская певица и автор песен. Она привлекла к себе внимание в 2013 году с выпуском сингла «Habits», но настоящего успеха добилась с ремиксом хип-хоп продюсера Hippie Sabotage на эту песню, который получил название «Stay High». 4 марта 2014 года вышел её дебютный мини-альбом Truth Serum, а 24 сентября этого же года дебютный студийный альбом Queen of the Clouds. Туве Лу является автором песен таких артистов, как Icona Pop, Girls Aloud и Шер Ллойд."
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textSize="15sp" />
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="20dp">
+
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
-                    android:paddingLeft="10dp"
-                    android:text="Шведская певица и автор песен. Она привлекла к себе внимание в 2013 году с выпуском сингла «Habits», но настоящего успеха добилась с ремиксом хип-хоп продюсера Hippie Sabotage на эту песню, который получил название «Stay High». 4 марта 2014 года вышел её дебютный мини-альбом Truth Serum, а 24 сентября этого же года дебютный студийный альбом Queen of the Clouds. Туве Лу является автором песен таких артистов, как Icona Pop, Girls Aloud и Шер Ллойд."
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textSize="15sp" />
+                    android:layout_gravity="center"
+                    android:background="#ffffff">
 
-            </RelativeLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:orientation="vertical">
 
-        </android.support.v7.widget.CardView>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/start"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:text="Жанры:"
+                                android:textSize="26sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:layout_width="fill_parent"
+                                android:layout_height="2dip"
+                                android:background="#BFBFBF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/genresList"
+                                android:padding="8dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="150dp">
+                            </android.support.v7.widget.RecyclerView>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+            </FrameLayout>
+        </LinearLayout>
     </ScrollView>
-    <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="8dp"
-        android:scaleType="fitCenter"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/internet_logo"
-        fab:fab_colorNormal="@color/colorPrimary"
-        fab:fab_colorPressed="@color/colorPrimaryDark"
-        fab:fab_colorRipple="@color/colorPrimary"/>
-</FrameLayout>
+
+
+</LinearLayout>

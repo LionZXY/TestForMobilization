@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">YandexMusic</string>
-    <string name="notfoundimage">NotFoundMusicImage</string>
+    <string name="app_name">Yandex.Mobilization</string>
+    <string name="notfoundimage">Not found image for music</string>
 </resources>

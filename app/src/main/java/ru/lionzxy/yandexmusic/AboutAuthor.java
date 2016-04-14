@@ -1,23 +1,28 @@
 package ru.lionzxy.yandexmusic;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
-import android.view.ViewTreeObserver;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ru.lionzxy.yandexmusic.elements.AuthorObject;
-import ru.lionzxy.yandexmusic.helper.TextHelper;
-import ru.lionzxy.yandexmusic.helper.PixelHelper;
+import ru.lionzxy.yandexmusic.lists.author.AuthorObject;
+import ru.lionzxy.yandexmusic.lists.author.AuthorRecyclerAdapter;
+import ru.lionzxy.yandexmusic.lists.genres.GenresObject;
+import ru.lionzxy.yandexmusic.lists.genres.GenresRecyclerAdapter;
+
+import android.view.*;
 
 /**
  * Created by LionZXY on 09.04.16.
  * YandexMusic
  */
 public class AboutAuthor extends AppCompatActivity {
+
+    private GenresRecyclerAdapter genresAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,22 +30,38 @@ public class AboutAuthor extends AppCompatActivity {
         Intent intent = getIntent();
         final AuthorObject ao = intent.hasExtra("authorObject") ? (AuthorObject) intent.getSerializableExtra("authorObject") : MusicList.unknowObject;
         final ImageView image = (ImageView) findViewById(R.id.imageView);
-        image.setImageBitmap(ao.image);
+        ao.setImageOnItemView(image, getResources(), true);
         final TextView descr = (TextView) findViewById(R.id.description);
+        ((TextView) findViewById(R.id.head_author)).setText(ao.name);
+        descr.setText(ao.description);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        image.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                String text = ao.description;
+        RecyclerView mRecyclerView;
+        RecyclerView.LayoutManager mLayoutManager;
 
-                int leftMargin = image.getMeasuredWidth() - (int) PixelHelper.pixelFromDP(getResources(), 8);
-                SpannableString ss = new SpannableString(text);
-                ss.setSpan(new TextHelper.LeadingMarginSpan2(7, leftMargin), 0, ss.length(), 0);
-                descr.setText(ss);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.genresList);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        genresAdapter = new GenresRecyclerAdapter(this);
+        mRecyclerView.setAdapter(genresAdapter);
+
+        genresAdapter.addItem(GenresObject.UNKNOWN);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
                 return true;
-            }
-        });
-
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

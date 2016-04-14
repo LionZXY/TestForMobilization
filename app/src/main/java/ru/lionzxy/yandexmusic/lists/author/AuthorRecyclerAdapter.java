@@ -1,25 +1,22 @@
-package ru.lionzxy.yandexmusic.helper;
+package ru.lionzxy.yandexmusic.lists.author;
 
-import android.app.Activity;
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 import android.view.View;
 import android.view.ViewGroup;
 
 import ru.lionzxy.yandexmusic.R;
-import ru.lionzxy.yandexmusic.elements.AuthorObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by LionZXY on 09.04.16.
  * YandexMusic
  */
-public class AuthorRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
+public class AuthorRecyclerAdapter extends RecyclerView.Adapter<AuthorRecyclerViewHolder> {
     private List<AuthorObject> mData = new ArrayList<>();
     private Context context;
 
@@ -28,14 +25,14 @@ public class AuthorRecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHold
     }
 
     @Override
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AuthorRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.authorcard, parent, false);
-        return new RecyclerViewHolder((CardView) itemView, context);
+        return new AuthorRecyclerViewHolder((LinearLayout) itemView, context);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(AuthorRecyclerViewHolder holder, int position) {
         holder.setItem(mData.get(position));
     }
 
