@@ -1,5 +1,6 @@
 package ru.lionzxy.yandexmusic.lists.author;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,17 +19,18 @@ import java.util.List;
  */
 public class AuthorRecyclerAdapter extends RecyclerView.Adapter<AuthorRecyclerViewHolder> {
     private List<AuthorObject> mData = new ArrayList<>();
-    private Context context;
+    private Activity activity;
 
-    public AuthorRecyclerAdapter(Context context) {
-        this.context = context;
+    public AuthorRecyclerAdapter(Activity activity) {
+
+        this.activity = activity;
     }
 
     @Override
     public AuthorRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.authorcard, parent, false);
-        return new AuthorRecyclerViewHolder((LinearLayout) itemView, context);
+        return new AuthorRecyclerViewHolder((LinearLayout) itemView, activity);
     }
 
     @Override

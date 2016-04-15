@@ -30,7 +30,7 @@ public class AboutAuthor extends AppCompatActivity {
         Intent intent = getIntent();
         final AuthorObject ao = intent.hasExtra("authorObject") ? (AuthorObject) intent.getSerializableExtra("authorObject") : MusicList.unknowObject;
         final ImageView image = (ImageView) findViewById(R.id.imageView);
-        ao.setImageOnItemView(image, getResources(), true);
+        ao.setImageOnItemView(this,image, getResources(), true);
         final TextView descr = (TextView) findViewById(R.id.description);
         ((TextView) findViewById(R.id.head_author)).setText(ao.name);
         descr.setText(ao.description);
@@ -38,15 +38,14 @@ public class AboutAuthor extends AppCompatActivity {
 
 
         RecyclerView mRecyclerView;
-        RecyclerView.LayoutManager mLayoutManager;
-
 
         mRecyclerView = (RecyclerView) findViewById(R.id.genresList);
 
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
 
         genresAdapter = new GenresRecyclerAdapter(this);
         mRecyclerView.setAdapter(genresAdapter);

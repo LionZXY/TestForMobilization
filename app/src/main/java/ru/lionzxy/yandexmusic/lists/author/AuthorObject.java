@@ -1,11 +1,16 @@
 package ru.lionzxy.yandexmusic.lists.author;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.view.View;
+import android.os.Looper;
+import android.os.Message;
+import android.support.annotation.Nullable;
 import android.widget.ImageView;
+
 import java.io.Serializable;
+import java.util.logging.Handler;
+
 import android.content.res.Resources;
 
 /**
@@ -14,20 +19,35 @@ import android.content.res.Resources;
  */
 
 
-import android.content.res.*;public class AuthorObject implements Serializable
-{
-    public String name;
-    public String description;
-	private int imageID = -1;
-	
-    public AuthorObject(String name, String description, int imageID) {
-        this.name = Character.isUpperCase(name.charAt(0)) ? name : name.replaceFirst(String.valueOf(name.charAt(0)), String.valueOf(Character.toUpperCase(name.charAt(0))));
-        this.description = Character.isUpperCase(description.charAt(0)) ? description : description.replaceFirst(String.valueOf(description.charAt(0)), String.valueOf(Character.toUpperCase(description.charAt(0))));
+import ru.lionzxy.yandexmusic.helper.TextHelper;
+import ru.lionzxy.yandexmusic.io.IRecieveImage;
+import ru.lionzxy.yandexmusic.io.ImageResource;
+
+public class AuthorObject implements Serializable {
+    private ImageResource bigImage, smallImage;
+    public String name, description;
+    private int imageID = -1, authorId = -1;
+
+    public AuthorObject(String name, String description, int authorId, int imageID) {
+        this.name = TextHelper.upperFirstSymbols(name);
+        this.description = TextHelper.upperFirstSymbols(description);
         this.imageID = imageID;
+        this.authorId = authorId;
     }
-	
-	public void setImageOnItemView(final ImageView iv, Resources r, boolean isBigPicture){
-		iv.setImageResource(imageID);
-	}
+
+    public void setImageOnItemView(final Activity activity, final ImageView iv, Resources r, boolean isBigPicture) {
+        new ImageResource(false, String.valueOf(authorId), "http://avatars.yandex.net/get-music-content/dfc531f5.p.1080505/300x300").getImage(new IRecieveImage() {
+            @Override
+            public void recieveResource(final @Nullable Bitmap bitmap) {
+                if (bitmap != null)
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            iv.setImageBitmap(bitmap);
+                        }
+                    });
+            }
+        });
+    }
 
 }
