@@ -1,20 +1,18 @@
 package ru.lionzxy.yandexmusic.lists.author;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.util.Log;
 
 import ru.lionzxy.yandexmusic.AboutAuthor;
 import ru.lionzxy.yandexmusic.R;
-
-import android.widget.*;
 
 /**
  * Created by LionZXY on 09.04.16.

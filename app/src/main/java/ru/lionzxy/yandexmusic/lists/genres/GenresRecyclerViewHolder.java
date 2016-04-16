@@ -1,19 +1,13 @@
 package ru.lionzxy.yandexmusic.lists.genres;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import ru.lionzxy.yandexmusic.AboutAuthor;
 import ru.lionzxy.yandexmusic.R;
-import ru.lionzxy.yandexmusic.lists.author.AuthorObject;
 
 /**
  * Created by LionZXY on 14.04.2016.

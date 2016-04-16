@@ -5,193 +5,215 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <com.melnykov.fab.ObservableScrollView
+            android:id="@+id/scrollViewList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:orientation="vertical">
 
-                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/card_view"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="#ffffff">
+                    android:layout_marginTop="10dp">
 
-                    <RelativeLayout
+                    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/card_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="4dp">
+                        android:layout_gravity="center"
+                        android:background="#ffffff">
 
-                        <TextView
-                            android:id="@+id/head_author"
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:ellipsize="marquee"
-                            android:maxLines="1"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="6dp"
-                            android:text="Tove Lo"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:textColor="#000000"
-                            android:textSize="50sp" />
-
-                        <FrameLayout
-                            android:id="@+id/frameLayoutImage"
-                            android:layout_width="200dp"
-                            android:layout_height="240dp"
-                            android:paddingLeft="9dp"
-                            android:paddingTop="75dp">
-
-                            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                android:id="@+id/cardViewImage"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                card_view:cardBackgroundColor="#BFBFBF">
-
-                                <ImageView
-                                    android:id="@+id/imageView"
-                                    android:layout_width="180dp"
-                                    android:layout_height="180dp"
-                                    android:layout_alignParentLeft="true"
-                                    android:layout_alignParentStart="true"
-                                    android:contentDescription="@string/notfoundimage"
-                                    android:padding="0dp"
-                                    android:scaleType="fitCenter"
-                                    android:src="@drawable/notfoundmusic" />
-                            </android.support.v7.widget.CardView>
-                        </FrameLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/frameLayoutImage"
-                            android:gravity="left"
-                            android:paddingTop="80dp"
-                            android:text="Треков:"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:textSize="20sp" />
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/frameLayoutImage"
-                            android:gravity="left"
-                            android:maxLength="5"
-                            android:maxLines="1"
-                            android:paddingTop="95dp"
-                            android:text="81"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:textSize="50sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/frameLayoutImage"
-                            android:gravity="left"
-                            android:paddingTop="170dp"
-                            android:text="Альбомов:"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:textSize="20sp" />
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/frameLayoutImage"
-                            android:gravity="left"
-                            android:maxLength="5"
-                            android:maxLines="1"
-                            android:paddingTop="185dp"
-                            android:text="22"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:textSize="50sp" />
-
-                        <TextView
-                            android:id="@+id/description"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="270dp"
-                            android:breakStrategy="high_quality"
-                            android:lineSpacingExtra="3.5sp"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:text="Шведская певица и автор песен. Она привлекла к себе внимание в 2013 году с выпуском сингла «Habits», но настоящего успеха добилась с ремиксом хип-хоп продюсера Hippie Sabotage на эту песню, который получил название «Stay High». 4 марта 2014 года вышел её дебютный мини-альбом Truth Serum, а 24 сентября этого же года дебютный студийный альбом Queen of the Clouds. Туве Лу является автором песен таких артистов, как Icona Pop, Girls Aloud и Шер Ллойд."
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textSize="15sp" />
-
-                    </RelativeLayout>
-                </android.support.v7.widget.CardView>
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="50dp">
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="#ffffff">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="180dp"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:padding="4dp">
 
                             <TextView
-                                android:id="@+id/start"
+                                android:id="@+id/head_author"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:singleLine="true"
+                                android:ellipsize="marquee"
+                                android:marqueeRepeatLimit ="marquee_forever"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:scrollHorizontally="true"
+                                android:paddingLeft="10dp"
+                                android:text="Tove Lo"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textColor="#000000"
+                                android:textSize="50sp" />
+
+                            <FrameLayout
+                                android:id="@+id/frameLayoutImage"
+                                android:layout_width="200dp"
+                                android:layout_height="240dp"
+                                android:paddingLeft="9dp"
+                                android:paddingTop="75dp">
+
+                                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    android:id="@+id/cardViewImage"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    card_view:cardBackgroundColor="#BFBFBF">
+
+                                    <ImageView
+                                        android:id="@+id/imageView"
+                                        android:layout_width="180dp"
+                                        android:layout_height="180dp"
+                                        android:layout_alignParentLeft="true"
+                                        android:layout_alignParentStart="true"
+                                        android:alpha="0.1"
+                                        android:contentDescription="@string/notfoundimage"
+                                        android:padding="0dp"
+                                        android:scaleType="fitCenter"
+                                        android:src="@drawable/notfoundmusic" />
+                                </android.support.v7.widget.CardView>
+                            </FrameLayout>
+
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:text="Жанры:"
-                                android:textSize="26sp" />
-                        </LinearLayout>
+                                android:layout_toRightOf="@id/frameLayoutImage"
+                                android:gravity="left"
+                                android:paddingTop="75dp"
+                                android:text="Треков:"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="20sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
 
-                            <View
-                                android:layout_width="fill_parent"
-                                android:layout_height="2dip"
-                                android:background="#BFBFBF" />
-                        </LinearLayout>
+                            <TextView
+                                android:id="@+id/trackscol"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toRightOf="@id/frameLayoutImage"
+                                android:gravity="left"
+                                android:maxLength="5"
+                                android:maxLines="1"
+                                android:paddingTop="95dp"
+                                android:text="81"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="50sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/genresList"
-                                android:padding="8dp"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toRightOf="@id/frameLayoutImage"
+                                android:gravity="left"
+                                android:paddingTop="160dp"
+                                android:text="Альбомов:"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="20sp" />
+
+
+                            <TextView
+                                android:id="@+id/albumscol"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toRightOf="@id/frameLayoutImage"
+                                android:gravity="left"
+                                android:maxLength="5"
+                                android:maxLines="1"
+                                android:paddingTop="180dp"
+                                android:text="22"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="50sp" />
+
+                            <TextView
+                                android:id="@+id/description"
                                 android:layout_width="match_parent"
-                                android:layout_height="150dp">
-                            </android.support.v7.widget.RecyclerView>
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="270dp"
+                                android:breakStrategy="high_quality"
+                                android:lineSpacingExtra="3.5sp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:text="Шведская певица и автор песен. Она привлекла к себе внимание в 2013 году с выпуском сингла «Habits», но настоящего успеха добилась с ремиксом хип-хоп продюсера Hippie Sabotage на эту песню, который получил название «Stay High». 4 марта 2014 года вышел её дебютный мини-альбом Truth Serum, а 24 сентября этого же года дебютный студийный альбом Queen of the Clouds. Туве Лу является автором песен таких артистов, как Icona Pop, Girls Aloud и Шер Ллойд."
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textSize="15sp" />
+
+                        </RelativeLayout>
+                    </android.support.v7.widget.CardView>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="50dp">
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="#ffffff">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="180dp"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/start"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="4dp"
+                                    android:text="Жанры:"
+                                    android:textSize="26sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="2dip"
+                                    android:background="#BFBFBF" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/genresList"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="150dp"
+                                    android:padding="8dp"></android.support.v7.widget.RecyclerView>
+                            </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
 
-                </android.support.v7.widget.CardView>
-            </FrameLayout>
-        </LinearLayout>
-    </ScrollView>
+                    </android.support.v7.widget.CardView>
+                </FrameLayout>
+            </LinearLayout>
+        </com.melnykov.fab.ObservableScrollView>
 
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:src="@drawable/internetlogo"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="#FFFFFF"
+            fab:fab_colorRipple="#FFFFFF" />
+    </FrameLayout>
 
 </LinearLayout>

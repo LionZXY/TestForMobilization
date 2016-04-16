@@ -1,19 +1,22 @@
 package ru.lionzxy.yandexmusic;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.melnykov.fab.FloatingActionButton;
+import com.melnykov.fab.ObservableScrollView;
+
 import ru.lionzxy.yandexmusic.lists.author.AuthorObject;
-import ru.lionzxy.yandexmusic.lists.author.AuthorRecyclerAdapter;
 import ru.lionzxy.yandexmusic.lists.genres.GenresObject;
 import ru.lionzxy.yandexmusic.lists.genres.GenresRecyclerAdapter;
-
-import android.view.*;
 
 /**
  * Created by LionZXY on 09.04.16.
@@ -27,15 +30,31 @@ public class AboutAuthor extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_author);
-        Intent intent = getIntent();
-        final AuthorObject ao = intent.hasExtra("authorObject") ? (AuthorObject) intent.getSerializableExtra("authorObject") : MusicList.unknowObject;
-        final ImageView image = (ImageView) findViewById(R.id.imageView);
-        ao.setImageOnItemView(this,image, getResources(), true);
-        final TextView descr = (TextView) findViewById(R.id.description);
-        ((TextView) findViewById(R.id.head_author)).setText(ao.name);
-        descr.setText(ao.description);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Intent intent = getIntent();
+        final AuthorObject ao = intent.hasExtra("authorObject") ? (AuthorObject) intent.getSerializableExtra("authorObject") : AuthorObject.UNKNOWN;
 
+        final ImageView image = (ImageView) findViewById(R.id.imageView);
+        ao.setImageOnItemView(this, image, getResources(), true);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        if (ao.link == null || ao.link.length() == 0)
+            fab.hide();
+        else {
+            fab.attachToScrollView((ObservableScrollView) findViewById(R.id.scrollViewList));
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ao.link));
+                    startActivity(browserIntent);
+                }
+            });
+        }
+        TextView descr = (TextView) findViewById(R.id.description);
+        ((TextView) findViewById(R.id.head_author)).setText(ao.name);
+        ((TextView) findViewById(R.id.trackscol)).setText(String.valueOf(ao.tracks));
+        ((TextView) findViewById(R.id.albumscol)).setText(String.valueOf(ao.albums));
+        descr.setText(ao.description);
 
         RecyclerView mRecyclerView;
 

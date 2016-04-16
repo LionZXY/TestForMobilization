@@ -5,8 +5,8 @@ import ru.lionzxy.yandexmusic.R;
 /**
  * Created by nikit_000 on 14.04.2016.
  */
-public enum GenresObject {
-    UNKNOWN("Неизвестный жанр", "unknown", R.drawable.notfoundmusic);
+public class GenresObject {
+    public static final GenresObject UNKNOWN = new GenresObject("Неизвестный жанр", "unknown", R.drawable.notfoundmusic);
 
     public int imageId;
     public String name, code;

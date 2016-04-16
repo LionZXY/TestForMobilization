@@ -18,10 +18,10 @@
             card_view:cardCornerRadius="4dp"
 			android:paddingTop="4dp"
 			android:clickable="true"
-			android:foreground="?android:attr/selectableItemBackground">
-            >
+			android:foreground="?android:attr/selectableItemBackground">>
 
             <ImageView
+                android:alpha="0.1"
                 android:id="@+id/imageView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"

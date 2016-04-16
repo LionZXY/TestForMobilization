@@ -1,17 +1,16 @@
 package ru.lionzxy.yandexmusic.lists.author;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.widget.LinearLayout;
 import android.view.View;
 import android.view.ViewGroup;
-
-import ru.lionzxy.yandexmusic.R;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ru.lionzxy.yandexmusic.R;
 
 /**
  * Created by LionZXY on 09.04.16.
