@@ -75,7 +75,7 @@ public class AboutAuthor extends AppCompatActivity {
             for (GenresObject genresObject : ao.genresObjects)
                 genresAdapter.addItem(genresObject);
         } else {
-            findViewById(R.id.genresList).setVisibility(View.INVISIBLE);
+            findViewById(R.id.genresFrame).setVisibility(View.GONE);
         }
     }
 

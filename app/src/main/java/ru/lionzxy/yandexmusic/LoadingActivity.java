@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
@@ -54,9 +55,9 @@ public class LoadingActivity extends AppCompatActivity {
         setContentView(R.layout.loading);
 
         progress = (RoundCornerProgressBar) findViewById(R.id.progress_2);
-        progress.setProgressColor(getResources().getColor(R.color.colorPrimaryDark));
+        progress.setProgressColor(getResources().getColor(R.color.colorPrimary));
         progress.setProgressBackgroundColor(Color.parseColor("#BFBFBF"));
-        progress.setSecondaryProgressColor(getResources().getColor(R.color.colorPrimary));
+        progress.setSecondaryProgressColor(getResources().getColor(R.color.colorPrimaryDark));
         progress.setSecondaryProgress(480);
         progress.setMax(1000);
         progress.setProgress(400);
@@ -68,8 +69,12 @@ public class LoadingActivity extends AppCompatActivity {
             @Override
             public void run() {
                 SQLiteDatabase sdb = mDatabaseHelper.getReadableDatabase();
+                mHandler.obtainMessage(3, getResources().getString(R.string.load1)).sendToTarget();
                 loadGenresFromDatabase(sdb);
+                mHandler.obtainMessage(3, getResources().getString(R.string.load2)).sendToTarget();
                 loadAuthorsFromDatabase(sdb);
+
+                mHandler.obtainMessage(3,getResources().getString(R.string.load3)).sendToTarget();
                 sdb = mDatabaseHelper.getWritableDatabase();
                 try {
                     HttpURLConnection urlConnection = (HttpURLConnection) new URL("https://api.music.yandex.net/genres").openConnection();
@@ -87,6 +92,7 @@ public class LoadingActivity extends AppCompatActivity {
                     Log.e("Genres", "Error while connect to internet", e);
                 }
 
+                mHandler.obtainMessage(3,getResources().getString(R.string.load4)).sendToTarget();
                 try {
                     HttpURLConnection urlConnection = (HttpURLConnection) new URL("http://download.cdn.yandex.net/mobilization-2016/artists.json").openConnection();
                     urlConnection.connect();
@@ -126,6 +132,10 @@ public class LoadingActivity extends AppCompatActivity {
                     }
                     case 2: {
                         progress.setSecondaryProgress((int) message.obj);
+                        break;
+                    }
+                    case 3: {
+                        ((TextView) findViewById(R.id.progress)).setText((String) message.obj);
                         break;
                     }
                 }

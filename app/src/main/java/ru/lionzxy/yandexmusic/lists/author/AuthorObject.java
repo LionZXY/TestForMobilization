@@ -71,8 +71,11 @@ public class AuthorObject implements Serializable {
         String tmpGenres = cursor.getString(cursor.getColumnIndex(DatabaseHelper.AUTHOR_COLUMN.GENRES_INT_ARR_COLUMN));
         if (tmpGenres != null) {
             String tmpGenresString[] = tmpGenres.split(",");
-            for (String str : tmpGenresString)
-                genresObjects.add(LoadingActivity.genresHashMapOnDBID.get(Long.parseLong(str)));
+            for (String str : tmpGenresString) {
+                GenresObject ge = LoadingActivity.genresHashMapOnDBID.get(Long.parseLong(str));
+                if (ge != null)
+                    genresObjects.add(ge);
+            }
         }
     }
 
@@ -106,44 +109,6 @@ public class AuthorObject implements Serializable {
     }
 
 
-    public void setImageOnItemView(final Activity activity, final ImageView iv, boolean isBigPicture) {
-        final Animation vis = AnimationUtils.loadAnimation(activity, R.anim.alphavisible);
-        final Animation unvis = AnimationUtils.loadAnimation(activity, R.anim.alphaunvisible);
-        final ImageResource ir = isBigPicture ? bigImage == null ? smallImage : bigImage : smallImage == null ? bigImage : smallImage;
-        if (ir != null)
-            ir.getImage(new IRecieveImage() {
-                @Override
-                public void recieveResource(final @Nullable Bitmap bitmap, final String name) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            iv.clearAnimation();
-                            if (name.substring(name.lastIndexOf("_") + 1).equals(String.valueOf(authorId))) {
-                                if (bitmap != null) {
-                                    new Handler().postDelayed(new Runnable() {
-                                        public void run() {
-                                            iv.setImageBitmap(bitmap);
-                                            iv.setAnimation(vis);
-                                        }
-                                    }, unvis.getDuration());
-                                    iv.setAlpha(1.0F);
-                                    iv.startAnimation(unvis);
-                                } else {
-                                    iv.startAnimation(vis);
-                                    iv.setAlpha(1.0F);
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        else {
-            iv.setImageResource(R.drawable.notfoundmusic);
-            iv.startAnimation(vis);
-            iv.setAlpha(1.0F);
-        }
-    }
-
     public AuthorObject putInDB(SQLiteDatabase mSqLiteDatabase) {
         ContentValues values = new ContentValues();
 
@@ -169,6 +134,45 @@ public class AuthorObject implements Serializable {
         idInDB = mSqLiteDatabase.insert(DatabaseHelper.DATABASE_AUTHOR_TABLE, null, values);
         Log.i("Author", "Author " + name + " put in table. " + idInDB);
         return this;
+    }
+
+    public void setImageOnItemView(final Activity activity, final ImageView iv, boolean isBigPicture) {
+        final Animation vis = AnimationUtils.loadAnimation(activity, R.anim.alphavisible);
+        final Animation unvis = AnimationUtils.loadAnimation(activity, R.anim.alphaunvisible);
+        final ImageResource ir = isBigPicture ? bigImage == null ? smallImage : bigImage : smallImage == null ? bigImage : smallImage;
+        if (ir != null)
+            ir.getImage(new IRecieveImage() {
+                @Override
+                public void recieveResource(final @Nullable Bitmap bitmap, final String name) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            iv.clearAnimation();
+                            if (name.substring(name.lastIndexOf("_") + 1).equals(String.valueOf(authorId))) {
+                                if (bitmap != null) {
+                                    new Handler().postDelayed(new Runnable() {
+                                        public void run() {
+                                            if (name.substring(name.lastIndexOf("_") + 1).equals(String.valueOf(authorId)))
+                                                iv.setImageBitmap(bitmap);
+                                            iv.setAnimation(vis);
+                                        }
+                                    }, unvis.getDuration());
+                                    iv.setAlpha(1.0F);
+                                    iv.startAnimation(unvis);
+                                } else {
+                                    iv.startAnimation(vis);
+                                    iv.setAlpha(1.0F);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        else {
+            iv.setImageResource(R.drawable.notfoundmusic);
+            iv.startAnimation(vis);
+            iv.setAlpha(1.0F);
+        }
     }
 
 
