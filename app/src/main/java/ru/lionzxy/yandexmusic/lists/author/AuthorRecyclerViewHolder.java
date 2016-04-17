@@ -33,7 +33,10 @@ public class AuthorRecyclerViewHolder extends RecyclerView.ViewHolder implements
 
     public AuthorRecyclerViewHolder setItem(AuthorObject ao) {
         this.ao = ao;
-        ao.setImageOnItemView(activity, ((ImageView) view.findViewById(R.id.imageView)), activity.getResources(), false);
+        ImageView iv = (ImageView) view.findViewById(R.id.imageView);
+        iv.clearAnimation();
+        iv.setImageResource(R.drawable.notfoundmusic);
+        ao.setImageOnItemView(activity, iv, false);
         ((TextView) view.findViewById(R.id.description)).setText(ao.description);
         ((TextView) view.findViewById(R.id.head_author)).setText(ao.name);
         return this;

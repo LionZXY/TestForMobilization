@@ -59,7 +59,7 @@ public class ImageResource implements Serializable {
                         getImageInThisThread(recieveImage);
                     } catch (Exception e) {
                         Log.e("ImageResource", "Error while get image", e);
-                        recieveImage.recieveResource(null);
+                        recieveImage.recieveResource(null, name);
                     }
                     threadRun = false;
                 }
@@ -67,7 +67,7 @@ public class ImageResource implements Serializable {
             threadRun = true;
         } else {
             //When thread now working
-            recieveImage.recieveResource(null);
+            recieveImage.recieveResource(null, name);
             /*Thread thr = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -103,7 +103,7 @@ public class ImageResource implements Serializable {
         switch (type) {
             case NETWORK: {
                 if (url == null) {
-                    recieveImage.recieveResource(null);
+                    recieveImage.recieveResource(null, name);
                     break;
                 }
                 Log.i("ImageResource", "Download " + url);
@@ -115,7 +115,7 @@ public class ImageResource implements Serializable {
 
                 Bitmap bitmap = BitmapFactory.decodeStream(urlc.getInputStream());
 
-                recieveImage.recieveResource(bitmap);
+                recieveImage.recieveResource(bitmap, name);
 
                 urlc.disconnect();
 
@@ -128,10 +128,9 @@ public class ImageResource implements Serializable {
                     file.createNewFile();
 
                     FileOutputStream fos = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 85, fos);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 70, fos);
                     fos.flush();
                     fos.close();
-                    Log.i("ImageResource", "File saved");
                     this.type = ImageResourceType.LOCAL_STORAGE;
                 }
                 break;
@@ -141,15 +140,25 @@ public class ImageResource implements Serializable {
                 Log.i("ImageResource", "Load image from device  " + file);
 
                 if (file == null) {
-                    recieveImage.recieveResource(null);
+                    recieveImage.recieveResource(null,name);
                     break;
                 }
 
-                recieveImage.recieveResource(BitmapFactory.decodeStream(new FileInputStream(file)));
-                Log.i("ImageResource","Load sucsesful");
+                recieveImage.recieveResource(BitmapFactory.decodeStream(new FileInputStream(file)),name);
+                Log.i("ImageResource", "Load sucsesful");
                 break;
             }
         }
+    }
+
+    public File getAsFile() {
+        if (type == ImageResourceType.LOCAL_STORAGE)
+            return this.file;
+        else return null;
+    }
+
+    public String getAsURL() {
+        return this.url;
     }
 
 }

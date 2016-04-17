@@ -1,6 +1,6 @@
 package ru.lionzxy.yandexmusic.lists.genres;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,17 +15,17 @@ import ru.lionzxy.yandexmusic.R;
 
 public class GenresRecyclerAdapter extends RecyclerView.Adapter<GenresRecyclerViewHolder> {
     private List<GenresObject> mData = new ArrayList<>();
-    private Context context;
+    private Activity activity;
 
-    public GenresRecyclerAdapter(Context context) {
-        this.context = context;
+    public GenresRecyclerAdapter(Activity activity) {
+        this.activity = activity;
     }
 
     @Override
     public GenresRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.genrelist, parent, false);
-        return new GenresRecyclerViewHolder((LinearLayout) itemView, context);
+        return new GenresRecyclerViewHolder((LinearLayout) itemView, activity);
     }
 
     @Override

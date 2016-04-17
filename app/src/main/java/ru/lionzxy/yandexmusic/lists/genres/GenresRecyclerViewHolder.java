@@ -1,6 +1,6 @@
 package ru.lionzxy.yandexmusic.lists.genres;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,18 +17,18 @@ public class GenresRecyclerViewHolder extends RecyclerView.ViewHolder implements
 
     public LinearLayout view;
     public GenresObject go;
-    private Context context;
+    private Activity activity;
 
-    public GenresRecyclerViewHolder(LinearLayout itemView, Context context) {
+    public GenresRecyclerViewHolder(LinearLayout itemView, Activity activity) {
         super(itemView);
         view = itemView;
         itemView.findViewById(R.id.card_view).setOnClickListener(this);
-        this.context = context;
+        this.activity = activity;
     }
 
     public GenresRecyclerViewHolder setItem(GenresObject go) {
         this.go = go;
-        ((ImageView) view.findViewById(R.id.genresPic)).setImageResource(go.imageId);
+        go.setImageOnItemView(activity, ((ImageView) view.findViewById(R.id.genresPic)), false);
         ((TextView) view.findViewById(R.id.genresName)).setText(go.name);
         return this;
     }

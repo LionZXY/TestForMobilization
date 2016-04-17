@@ -8,5 +8,5 @@ import android.support.annotation.Nullable;
  * YandexMusic
  */
 public interface IRecieveImage {
-    void recieveResource(@Nullable Bitmap bitmap);
+    void recieveResource(@Nullable Bitmap bitmap, String id);
 }

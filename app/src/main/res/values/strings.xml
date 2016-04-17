@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Yandex.Mobilization</string>
     <string name="notfoundimage">Not found image for music</string>
+    <string name="wait">Пожалуйста подождите. Файл загружается</string>
 </resources>

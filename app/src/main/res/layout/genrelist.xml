@@ -27,6 +27,7 @@
                 card_view:cardBackgroundColor="#BFBFBF">
 
                 <ImageView
+                    android:alpha="0.3"
                     android:id="@+id/genresPic"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

@@ -21,8 +21,12 @@ public class AuthorRecyclerAdapter extends RecyclerView.Adapter<AuthorRecyclerVi
     private Activity activity;
 
     public AuthorRecyclerAdapter(Activity activity) {
-
         this.activity = activity;
+    }
+
+    public AuthorRecyclerAdapter(Activity activity, List<AuthorObject> authorObjects) {
+        this.activity = activity;
+        this.mData = authorObjects;
     }
 
     @Override
