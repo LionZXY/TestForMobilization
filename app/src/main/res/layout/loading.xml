@@ -27,7 +27,8 @@
                 android:src="@drawable/ogimage"
                 android:scaleType="centerCrop"
                 android:layout_gravity="center"
-                android:id="@+id/imageView2" />
+                android:id="@+id/imageView2"
+                android:contentDescription="@string/logo" />
 
             <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
                 android:id="@+id/progress_2"

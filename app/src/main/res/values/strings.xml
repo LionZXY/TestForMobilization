@@ -1,11 +1,31 @@
 <resources>
+    <!--Заголовки активити-->
     <string name="app_name">Yandex.Mobilization</string>
-    <string name="notfoundimage">Not found image for music</string>
+    <string name="loading">Загрузка</string>
+    <string name="list">Список авторов</string>
+    <string name="about">О Автор</string>
 
+    <!--Стандартные параметры-->
+    <string name="default_genres">Неизвестный жанр</string>
+    <string name="default_author">Неизвестный автор</string>
+    <string name="default_author_description">Если вы видете это сообщение, значит произошла ошибка в программе. Пожалуйста сообщите об этом разработчику</string>
+    <string name="default_tracks">81</string>
+    <string name="default_albums">22</string>
+
+    <!--Описания изобажний-->
+    <string name="genres">Визуализация жанра</string>
+    <string name="logo">Лого приложения</string>
+    <string name="notfoundimage">Не найдено изображение для загрузки</string>
+
+    <!--Тосты-->
     <string name="wait">Пожалуйста подождите. Файл загружается</string>
 
+    <!--Состояния загрузки-->
     <string name="load1">Загрузка жанров из базы данных</string>
     <string name="load2">Загрузка авторов из базы данных</string>
     <string name="load3">Загрузка жанров с сервера</string>
     <string name="load4">Загрузка авторов с сервера</string>
+
+    <string name="tracks">Треков:</string>
+    <string name="albums">Альбомов:</string>
 </resources>

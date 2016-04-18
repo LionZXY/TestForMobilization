@@ -25,11 +25,14 @@ import ru.lionzxy.yandexmusic.io.ImageResource;
  * Created by LionZXY on 09.04.16.
  * YandexMusic
  */
-public class AuthorRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class AuthorRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, IRecieveImage {
 
     public LinearLayout view;
     public AuthorObject ao;
     private Activity activity;
+    private ImageView iv;
+    //One view - one thread
+    private Thread imageLoadThread = null;
 
     public AuthorRecyclerViewHolder(LinearLayout itemView, Activity activity) {
         super(itemView);
@@ -40,9 +43,17 @@ public class AuthorRecyclerViewHolder extends RecyclerView.ViewHolder implements
 
     public AuthorRecyclerViewHolder setItem(AuthorObject ao) {
         this.ao = ao;
-        ImageView iv = (ImageView) view.findViewById(R.id.imageView);
+
+        //Find image
+        iv = (ImageView) view.findViewById(R.id.imageView);
+
+        //Clear
+        if (imageLoadThread != null)
+            imageLoadThread.interrupt();
         iv.clearAnimation();
         iv.setImageResource(R.drawable.notfoundmusic);
+
+        //Set content
         setImageOnItemView(activity, iv, false);
         ((TextView) view.findViewById(R.id.description)).setText(ao.description);
         ((TextView) view.findViewById(R.id.head_author)).setText(ao.name);
@@ -70,34 +81,9 @@ public class AuthorRecyclerViewHolder extends RecyclerView.ViewHolder implements
 
     public void setImageOnItemView(final Activity activity, final ImageView iv, boolean isBigPicture) {
         final Animation vis = AnimationUtils.loadAnimation(activity, R.anim.alphavisible);
-        final Animation unvis = AnimationUtils.loadAnimation(activity, R.anim.alphaunvisible);
         final ImageResource ir = isBigPicture ? ao.bigImage == null ? ao.smallImage : ao.bigImage : ao.smallImage == null ? ao.bigImage : ao.smallImage;
         if (ir != null)
-            ir.getImage(new IRecieveImage() {
-                @Override
-                public void recieveResource(final @Nullable Bitmap bitmap, final String name) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            iv.clearAnimation();
-                                if (bitmap != null) {
-                                    new Handler().postDelayed(new Runnable() {
-                                        public void run() {
-                                            iv.setImageBitmap(bitmap);
-                                            iv.setAnimation(vis);
-                                        }
-                                    }, unvis.getDuration());
-                                    iv.setAlpha(1.0F);
-                                    iv.startAnimation(unvis);
-                                } else {
-                                    iv.startAnimation(vis);
-                                    iv.setAlpha(1.0F);
-                                }
-
-                        }
-                    });
-                }
-            });
+            this.imageLoadThread = ir.getImage(this);
         else {
             iv.setImageResource(R.drawable.notfoundmusic);
             iv.startAnimation(vis);
@@ -106,5 +92,36 @@ public class AuthorRecyclerViewHolder extends RecyclerView.ViewHolder implements
     }
 
 
+    @Override
+    public void recieveResource(final @Nullable Bitmap bitmap, final String id) {
+        final Thread thisThread = Thread.currentThread();
 
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                final Animation vis = AnimationUtils.loadAnimation(activity, R.anim.alphavisible);
+                final Animation unvis = AnimationUtils.loadAnimation(activity, R.anim.alphaunvisible);
+                iv.clearAnimation();
+
+                if (thisThread.isInterrupted())
+                    return;
+
+                if (bitmap != null) {
+                    if (id.substring(id.lastIndexOf("_") + 1).equals(String.valueOf(ao.authorId)))
+                        new Handler().postDelayed(new Runnable() {
+                            public void run() {
+                                iv.setImageBitmap(bitmap);
+                                iv.setAnimation(vis);
+                            }
+                        }, unvis.getDuration());
+                    iv.setAlpha(1.0F);
+                    iv.startAnimation(unvis);
+                } else {
+                    iv.startAnimation(vis);
+                    iv.setAlpha(1.0F);
+                }
+            }
+        });
+    }
 }

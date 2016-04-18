@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,11 @@ public class MusicList extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
         checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.INTERNET");
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return keyCode != KeyEvent.KEYCODE_BACK && super.onKeyDown(keyCode, event);
     }
 
     public void checkPermission(String... perm) {

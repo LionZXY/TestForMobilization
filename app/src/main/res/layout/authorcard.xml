@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:android.support.v7.cardview="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -24,7 +22,7 @@
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:paddingTop="4dp"
-                card_view:cardCornerRadius="4dp">>
+                card_view:cardCornerRadius="4dp">
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -46,7 +44,7 @@
                     android:maxLines="1"
                     android:paddingLeft="100dp"
                     android:paddingTop="6dp"
-                    android:text="Tove Lo"
+                    android:text="@string/default_author"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="#000000"
                     android:textSize="20sp" />
@@ -64,9 +62,9 @@
                     android:ellipsize="end"
                     android:maxLines="3"
                     android:paddingRight="5dp"
-                    android:text="Шведская певица и автор песен. Она привлекла к себе внимание в 2013 году с выпуском сингла «Habits», но настоящего успеха добилась с ремиксом хип-хоп продюсера Hippie Sabotage на эту песню, который получил название «Stay High». 4 марта 2014 года вышел её дебютный мини-альбом Truth Serum, а 24 сентября этого же года дебютный студийный альбом Queen of the Clouds. Туве Лу является автором песен таких артистов, как Icona Pop, Girls Aloud и Шер Ллойд."
+                    android:text="@string/default_author_description"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textSize="15dp" />
+                    android:textSize="15sp" />
 
 
             </android.support.v7.widget.CardView>

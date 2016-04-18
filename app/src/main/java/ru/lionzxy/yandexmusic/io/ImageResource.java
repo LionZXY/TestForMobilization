@@ -51,9 +51,9 @@ public class ImageResource implements Serializable {
      *
      * @param recieveImage interface for get image
      */
-    public void getImage(@NonNull final IRecieveImage recieveImage) {
+    public Thread getImage(@NonNull final IRecieveImage recieveImage) {
         if (!threadRun) {
-            new Thread(new Runnable() {
+            final Thread thr = new Thread(new Runnable() {
                 public void run() {
                     try {
                         getImageInThisThread(recieveImage);
@@ -63,8 +63,10 @@ public class ImageResource implements Serializable {
                     }
                     threadRun = false;
                 }
-            }).start();
+            });
+            thr.start();
             threadRun = true;
+            return thr;
         } else {
             //When thread now working
             recieveImage.recieveResource(null, name);
@@ -84,6 +86,7 @@ public class ImageResource implements Serializable {
             });
             thr.setPriority(Thread.MIN_PRIORITY);
             thr.start();*/
+            return null;
         }
     }
 
@@ -100,6 +103,11 @@ public class ImageResource implements Serializable {
      * @param save         only for network. Save when download.
      */
     public void getImageInThisThread(@NonNull IRecieveImage recieveImage, boolean save) throws Exception {
+        Thread thisThread = Thread.currentThread();
+
+        if(thisThread.isInterrupted())
+            return;
+
         switch (type) {
             case NETWORK: {
                 if (url == null) {
@@ -113,7 +121,15 @@ public class ImageResource implements Serializable {
                 urlc.setConnectTimeout(5000);
                 urlc.setRequestMethod("GET");
 
+                if(thisThread.isInterrupted()){
+                    urlc.disconnect();
+                    return;}
+
                 Bitmap bitmap = BitmapFactory.decodeStream(urlc.getInputStream());
+
+                if(thisThread.isInterrupted()){
+                    urlc.disconnect();
+                    return;}
 
                 recieveImage.recieveResource(bitmap, name);
 
@@ -126,6 +142,9 @@ public class ImageResource implements Serializable {
                     if (!file.getParentFile().exists())
                         file.getParentFile().mkdirs();
                     file.createNewFile();
+
+                    if(thisThread.isInterrupted())
+                        return;
 
                     FileOutputStream fos = new FileOutputStream(file);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 70, fos);
@@ -140,11 +159,14 @@ public class ImageResource implements Serializable {
                 Log.i("ImageResource", "Load image from device  " + file);
 
                 if (file == null) {
-                    recieveImage.recieveResource(null,name);
+                    recieveImage.recieveResource(null, name);
                     break;
                 }
 
-                recieveImage.recieveResource(BitmapFactory.decodeStream(new FileInputStream(file)),name);
+                if(thisThread.isInterrupted())
+                    return;
+
+                recieveImage.recieveResource(BitmapFactory.decodeStream(new FileInputStream(file)), name);
                 Log.i("ImageResource", "Load sucsesful");
                 break;
             }

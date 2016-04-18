@@ -74,13 +74,15 @@ public class LoadingActivity extends AppCompatActivity {
                 mHandler.obtainMessage(3, getResources().getString(R.string.load2)).sendToTarget();
                 loadAuthorsFromDatabase(sdb);
 
-                mHandler.obtainMessage(3,getResources().getString(R.string.load3)).sendToTarget();
+                mHandler.obtainMessage(3, getResources().getString(R.string.load3)).sendToTarget();
                 sdb = mDatabaseHelper.getWritableDatabase();
                 try {
                     HttpURLConnection urlConnection = (HttpURLConnection) new URL("https://api.music.yandex.net/genres").openConnection();
                     urlConnection.connect();
                     int file_size = urlConnection.getContentLength();
                     downloadGenres(urlConnection, sdb);
+
+                    //Yandex.Music don't support file size
                    /* if (!sp.contains("genressize")) {
                         sp.edit().putInt("genressize", file_size).apply();
                     } else {
@@ -92,19 +94,24 @@ public class LoadingActivity extends AppCompatActivity {
                     Log.e("Genres", "Error while connect to internet", e);
                 }
 
-                mHandler.obtainMessage(3,getResources().getString(R.string.load4)).sendToTarget();
+                mHandler.obtainMessage(3, getResources().getString(R.string.load4)).sendToTarget();
                 try {
                     HttpURLConnection urlConnection = (HttpURLConnection) new URL("http://download.cdn.yandex.net/mobilization-2016/artists.json").openConnection();
                     urlConnection.connect();
                     int file_size = urlConnection.getContentLength();
-                    downloadAuthors(urlConnection, sdb);
-                   /* if (!sp.contains("genressize")) {
-                        sp.edit().putInt("genressize", file_size).apply();
-                    } else {
-                        if (sp.getInt("genressize", 0) != file_size) {
 
-                        } else urlConnection.disconnect();
-                    }*/
+                    //Check for update. If i have access to server, i use MD5 or version in start file for check update
+                    if (sp.contains("auhtorsize")) {
+                        if (sp.getInt("auhtorsize", 0) == file_size) {
+                            urlConnection.disconnect();
+                        } else {
+                            downloadAuthors(urlConnection, sdb, file_size);
+                            sp.edit().putInt("auhtorsize", file_size).apply();
+                        }
+                    } else {
+                        downloadAuthors(urlConnection, sdb, file_size);
+                        sp.edit().putInt("auhtorsize", file_size).apply();
+                    }
                 } catch (Exception e) {
                     Log.e("Authors", "Error while connect to internet", e);
                 }
@@ -204,18 +211,18 @@ public class LoadingActivity extends AppCompatActivity {
         }
     }
 
-    public void downloadAuthors(HttpURLConnection urlConnection, SQLiteDatabase sdb) {
+    public void downloadAuthors(HttpURLConnection urlConnection, SQLiteDatabase sdb, long file_size) {
         try {
             urlConnection.setConnectTimeout(5000);
             urlConnection.setRequestMethod("GET");
 
-            int file_size = urlConnection.getContentLength();
             int this_progress = 0;
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             InputStream is = urlConnection.getInputStream();
             byte buffer[] = new byte[1024];
             int bytesRead = -1;
+
             while ((bytesRead = is.read(buffer)) != -1) {
                 byteArrayOutputStream.write(buffer, 0, bytesRead);
                 this_progress += bytesRead;

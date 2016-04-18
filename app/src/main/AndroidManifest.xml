@@ -16,8 +16,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".AboutAuthor"></activity>
-        <activity android:name=".MusicList"></activity>
+        <activity android:name=".AboutAuthor"
+            android:label="@string/about"/>
+        <activity android:name=".MusicList"
+            android:label="@string/list"/>
 
     </application>
 

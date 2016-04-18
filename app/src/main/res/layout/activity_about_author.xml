@@ -48,7 +48,7 @@
                                 android:paddingLeft="10dp"
                                 android:scrollHorizontally="true"
                                 android:singleLine="true"
-                                android:text="Tove Lo"
+                                android:text="@string/default_author"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:textColor="#000000"
                                 android:textSize="50sp" />
@@ -96,9 +96,8 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_toRightOf="@id/frameLayoutImage"
                                         android:gravity="left"
-                                        android:text="Треков:"
+                                        android:text="@string/tracks"
                                         android:textAppearance="?android:attr/textAppearanceLarge"
                                         android:textSize="20sp" />
 
@@ -108,10 +107,9 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="-10dp"
-                                        android:layout_toRightOf="@id/frameLayoutImage"
                                         android:gravity="left"
                                         android:singleLine="true"
-                                        android:text="81"
+                                        android:text="@string/default_tracks"
                                         android:textAppearance="?android:attr/textAppearanceLarge"
                                         android:textSize="50sp" />
 
@@ -119,9 +117,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="5dp"
-                                        android:layout_toRightOf="@id/frameLayoutImage"
                                         android:gravity="left"
-                                        android:text="Альбомов:"
+                                        android:text="@string/albums"
                                         android:textAppearance="?android:attr/textAppearanceLarge"
                                         android:textSize="20sp" />
 
@@ -131,10 +128,9 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="-10dp"
-                                        android:layout_toRightOf="@id/frameLayoutImage"
                                         android:gravity="left"
                                         android:singleLine="true"
-                                        android:text="22"
+                                        android:text="@string/default_albums"
                                         android:textAppearance="?android:attr/textAppearanceLarge"
                                         android:textSize="50sp" />
                                 </LinearLayout>
@@ -150,7 +146,7 @@
                                 android:paddingBottom="10dp"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="10dp"
-                                android:text="Шведская певица и автор песен. Она привлекла к себе внимание в 2013 году с выпуском сингла «Habits», но настоящего успеха добилась с ремиксом хип-хоп продюсера Hippie Sabotage на эту песню, который получил название «Stay High». 4 марта 2014 года вышел её дебютный мини-альбом Truth Serum, а 24 сентября этого же года дебютный студийный альбом Queen of the Clouds. Туве Лу является автором песен таких артистов, как Icona Pop, Girls Aloud и Шер Ллойд."
+                                android:text="@string/default_author_description"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
                                 android:textSize="15sp" />
 
