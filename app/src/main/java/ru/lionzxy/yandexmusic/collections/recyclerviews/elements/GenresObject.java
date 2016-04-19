@@ -1,17 +1,13 @@
-package ru.lionzxy.yandexmusic.lists.genres;
+package ru.lionzxy.yandexmusic.collections.recyclerviews.elements;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,10 +18,13 @@ import ru.lionzxy.yandexmusic.LoadingActivity;
 import ru.lionzxy.yandexmusic.R;
 import ru.lionzxy.yandexmusic.exceptions.ErrorJsonFileException;
 import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
+import ru.lionzxy.yandexmusic.helper.ImageHelper;
+import ru.lionzxy.yandexmusic.interfaces.IListElement;
+
 /**
  * Created by nikit_000 on 14.04.2016.
  */
-public class GenresObject implements Serializable {
+public class GenresObject implements Serializable, IListElement {
     public static final GenresObject UNKNOWN = new GenresObject();
 
     public int color;
@@ -76,8 +75,8 @@ public class GenresObject implements Serializable {
 
     public GenresObject putInDB(SQLiteDatabase mSqLiteDatabase) {
         ContentValues values = new ContentValues();
-        
-		values.put(DatabaseHelper.GENRES_COLUMN.BIG_IMAGE_LINK_COLUMN, bigImage);
+
+        values.put(DatabaseHelper.GENRES_COLUMN.BIG_IMAGE_LINK_COLUMN, bigImage);
         values.put(DatabaseHelper.GENRES_COLUMN.SMALL_IMAGE_LINK_COLUMN, smallImage);
         values.put(DatabaseHelper.GENRES_COLUMN.CODE_COLUMN, code);
         values.put(DatabaseHelper.GENRES_COLUMN.COLOR_COLUMN, color);
@@ -87,5 +86,20 @@ public class GenresObject implements Serializable {
         idInDB = mSqLiteDatabase.insert(DatabaseHelper.DATABASE_GENRES_TABLE, null, values);
         Log.i("Genres", "Genre " + name + " put in table. " + idInDB);
         return this;
+    }
+
+    @Override
+    public void setImage(ImageView imageView) {
+        ImageHelper.setImageOnImageView(imageView, smallImage, "smallGenre" + code);
+    }
+
+    @Override
+    public void setItem(View view) {
+        ((TextView) view.findViewById(R.id.genresName)).setText(name);
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

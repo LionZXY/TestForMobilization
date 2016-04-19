@@ -15,6 +15,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/centerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -27,11 +28,11 @@
                 android:src="@drawable/ogimage"
                 android:scaleType="centerCrop"
                 android:layout_gravity="center"
-                android:id="@+id/imageView2"
+                android:id="@+id/imageView"
                 android:contentDescription="@string/logo" />
 
             <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
-                android:id="@+id/progress_2"
+                android:id="@+id/progressBar"
                 android:layout_height="30dp"
                 android:layout_width="300dp"
                 app:rcRadius="5dp"

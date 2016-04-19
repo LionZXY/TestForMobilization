@@ -26,8 +26,8 @@ public class NormalTranslateAnimation extends Animation {
 
     @Override
     protected void applyTransformation(float interpolatedTime, Transformation t) {
-        float newY = (startY + targetY * interpolatedTime);
-        float newX = (startX + targetX * interpolatedTime);
+        float newY = (startY + (targetY - startX) * interpolatedTime);
+        float newX = (startX + (targetX - startX) * interpolatedTime);
         view.setY(newY);
         view.setX(newX);
         view.requestLayout();

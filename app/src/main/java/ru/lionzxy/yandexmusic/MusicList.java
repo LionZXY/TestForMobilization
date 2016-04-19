@@ -6,42 +6,37 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Window;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.lionzxy.yandexmusic.lists.LockableRecyclerView;
-import ru.lionzxy.yandexmusic.lists.author.AuthorObject;
-import ru.lionzxy.yandexmusic.lists.author.AuthorRecyclerAdapter;
+import ru.lionzxy.yandexmusic.collections.recyclerviews.LockableRecyclerView;
+import ru.lionzxy.yandexmusic.collections.recyclerviews.RecyclerViewAdapter;
+import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
+import ru.lionzxy.yandexmusic.interfaces.IListElement;
 
 public class MusicList extends AppCompatActivity {
 
-    private AuthorRecyclerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_list);
 
+
+        //Set up recyclerlist
         LockableRecyclerView mRecyclerView;
-        RecyclerView.LayoutManager mLayoutManager;
+        try {
+            mRecyclerView = (LockableRecyclerView) findViewById(R.id.recyclerview);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            mRecyclerView.setAdapter(new RecyclerViewAdapter(new ArrayList<IListElement>(LoadingActivity.authorObjects),R.layout.authorcard));
 
-
-        mRecyclerView = (LockableRecyclerView) findViewById(R.id.recyclerview);
-
-        mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mAdapter = new AuthorRecyclerAdapter(this, LoadingActivity.authorObjects, mRecyclerView);
-        mRecyclerView.setAdapter(mAdapter);
-
-        checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.INTERNET");
+            checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.INTERNET");
+        } catch (Exception e) {
+            new ContextDialogException(this, e);
+        }
     }
 
     @Override

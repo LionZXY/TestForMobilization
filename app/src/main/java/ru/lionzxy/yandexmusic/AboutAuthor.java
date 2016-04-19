@@ -4,14 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,14 +19,11 @@ import com.melnykov.fab.ObservableScrollView;
 
 import java.io.File;
 
+import ru.lionzxy.yandexmusic.collections.recyclerviews.RecyclerViewAdapter;
+import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.AuthorObject;
+import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.GenresObject;
 import ru.lionzxy.yandexmusic.helper.ImageHelper;
-import ru.lionzxy.yandexmusic.helper.PixelHelper;
-import ru.lionzxy.yandexmusic.lists.author.AuthorObject;
-import ru.lionzxy.yandexmusic.lists.genres.GenresObject;
-import ru.lionzxy.yandexmusic.lists.genres.GenresRecyclerAdapter;
 import ru.lionzxy.yandexmusic.views.AnimatedImageView;
-
-import com.squareup.picasso.*;
 
 /**
  * Created by LionZXY on 09.04.16.
@@ -36,7 +31,7 @@ import com.squareup.picasso.*;
  */
 public class AboutAuthor extends AppCompatActivity {
 
-    private GenresRecyclerAdapter genresAdapter;
+
     AuthorObject ao;
 
     @Override
@@ -49,7 +44,7 @@ public class AboutAuthor extends AppCompatActivity {
 
         final AnimatedImageView image = (AnimatedImageView) findViewById(R.id.imageView);
 
-        ImageHelper.setImageOnImageView(image, ao.bigImage, "bigAuthor" + ao.idInDB, Picasso.Priority.HIGH);
+        ImageHelper.setImageOnImageView(image, ao.bigImage, "bigAuthor" + ao.idInDB);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (ao.link == null || ao.link.length() == 0)
@@ -73,9 +68,8 @@ public class AboutAuthor extends AppCompatActivity {
         findViewById(R.id.additionalInfo).startAnimation(AnimationUtils.loadAnimation(this, R.anim.alphavisible));
 
         if (ao.genresObjects.size() > 0) {
-            LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-            View list = inflater.inflate(R.layout.genreslist, ((LinearLayout) findViewById(R.id.linearLayoutCards)), false);
-
+            View list = getLayoutInflater().inflate(R.layout.genreslist, null, false);
+            ((LinearLayout) findViewById(R.id.linearLayoutCards)).addView(list);
             RecyclerView mRecyclerView;
 
             mRecyclerView = (RecyclerView) list.findViewById(R.id.genresList);
@@ -86,10 +80,11 @@ public class AboutAuthor extends AppCompatActivity {
                     = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(layoutManager);
 
-            genresAdapter = new GenresRecyclerAdapter(this);
-            mRecyclerView.setAdapter(genresAdapter);
+            RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(R.layout.genrecard);
+
+            mRecyclerView.setAdapter(recyclerViewAdapter);
             for (GenresObject genresObject : ao.genresObjects)
-                genresAdapter.addItem(genresObject);
+                recyclerViewAdapter.addItem(genresObject);
         }
     }
 

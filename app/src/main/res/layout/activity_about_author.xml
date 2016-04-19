@@ -81,8 +81,7 @@
                                             android:onClick="openFullImage"
                                             android:contentDescription="@string/notfoundimage"
                                             android:padding="0dp"
-                                            android:scaleType="centerCrop"
-                                            android:src="@drawable/notfoundmusic" />
+                                            android:scaleType="centerCrop" />
                                     </android.support.v7.widget.CardView>
                                 </FrameLayout>
 

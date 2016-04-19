@@ -1,4 +1,4 @@
-package ru.lionzxy.yandexmusic.lists;
+package ru.lionzxy.yandexmusic.collections.recyclerviews;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

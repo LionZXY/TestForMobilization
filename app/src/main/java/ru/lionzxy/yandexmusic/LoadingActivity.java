@@ -15,24 +15,23 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.AuthorObject;
+import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.GenresObject;
 import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
-import ru.lionzxy.yandexmusic.lists.author.AuthorObject;
-import ru.lionzxy.yandexmusic.lists.genres.GenresObject;
+import ru.lionzxy.yandexmusic.helper.ImageHelper;
 
 /**
  * Created by LionZXY on 16.04.2016.
@@ -54,7 +53,9 @@ public class LoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
 
-        progress = (RoundCornerProgressBar) findViewById(R.id.progress_2);
+        ImageHelper.imageLoader.init(ImageLoaderConfiguration.createDefault(getApplicationContext()));
+
+        progress = (RoundCornerProgressBar) findViewById(R.id.progressBar);
         progress.setProgressColor(getResources().getColor(R.color.colorPrimary));
         progress.setProgressBackgroundColor(Color.parseColor("#BFBFBF"));
         progress.setSecondaryProgressColor(getResources().getColor(R.color.colorPrimaryDark));

@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ru.lionzxy.yandexmusic.MusicList">
 
-    <ru.lionzxy.yandexmusic.lists.LockableRecyclerView
+    <ru.lionzxy.yandexmusic.collections.recyclerviews.LockableRecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

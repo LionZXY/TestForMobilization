@@ -1,15 +1,11 @@
 package ru.lionzxy.yandexmusic.views;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-
-import com.felipecsl.gifimageview.library.GifImageView;
 
 import ru.lionzxy.yandexmusic.R;
 

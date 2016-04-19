@@ -1,4 +1,4 @@
-package ru.lionzxy.yandexmusic.lists.enums;
+package ru.lionzxy.yandexmusic.collections.enums;
 
 import java.io.Serializable;
 

@@ -7,15 +7,13 @@ public class TextHelper {
 
     public static String getFileName(String filename) {
         char fileSep = '/';
-        char escape = '%';
         int len = filename.length();
         StringBuilder sb = new StringBuilder(len);
         for (int i = 0; i < len; i++) {
             char ch = filename.charAt(i);
             if (ch < ' ' || ch >= 0x7F || ch == fileSep
-                    || (ch == '.' && i == 0)
-                    || ch == escape) {
-                sb.append(escape);
+                    || (ch == '.' && i == 0) || ch == '%' || ch == '+'
+                    || ch == '-' || ch == '*' || ch == ' ') {
                 if (ch < 0x10) {
                     sb.append('0');
                 }

@@ -35,8 +35,7 @@
                     android:background="#00ffffff"
                     android:contentDescription="@string/notfoundimage"
                     android:padding="8dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/notfoundmusic" />
+                    android:scaleType="centerCrop" />
 
                 <TextView
                     android:id="@+id/head_author"
