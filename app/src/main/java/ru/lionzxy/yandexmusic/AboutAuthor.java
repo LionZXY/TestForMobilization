@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,9 +21,14 @@ import com.melnykov.fab.ObservableScrollView;
 
 import java.io.File;
 
+import ru.lionzxy.yandexmusic.helper.ImageHelper;
+import ru.lionzxy.yandexmusic.helper.PixelHelper;
 import ru.lionzxy.yandexmusic.lists.author.AuthorObject;
 import ru.lionzxy.yandexmusic.lists.genres.GenresObject;
 import ru.lionzxy.yandexmusic.lists.genres.GenresRecyclerAdapter;
+import ru.lionzxy.yandexmusic.views.AnimatedImageView;
+
+import com.squareup.picasso.*;
 
 /**
  * Created by LionZXY on 09.04.16.
@@ -38,8 +47,9 @@ public class AboutAuthor extends AppCompatActivity {
         Intent intent = getIntent();
         ao = intent.hasExtra("authorObject") ? (AuthorObject) intent.getSerializableExtra("authorObject") : AuthorObject.UNKNOWN;
 
-        final ImageView image = (ImageView) findViewById(R.id.imageView);
-        ao.setImageOnItemView(this, image, true);
+        final AnimatedImageView image = (AnimatedImageView) findViewById(R.id.imageView);
+
+        ImageHelper.setImageOnImageView(image, ao.bigImage, "bigAuthor" + ao.idInDB, Picasso.Priority.HIGH);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (ao.link == null || ao.link.length() == 0)
@@ -59,10 +69,16 @@ public class AboutAuthor extends AppCompatActivity {
         ((TextView) findViewById(R.id.trackscol)).setText(String.valueOf(ao.tracks));
         ((TextView) findViewById(R.id.albumscol)).setText(String.valueOf(ao.albums));
         descr.setText(ao.description);
+
+        findViewById(R.id.additionalInfo).startAnimation(AnimationUtils.loadAnimation(this, R.anim.alphavisible));
+
         if (ao.genresObjects.size() > 0) {
+            LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+            View list = inflater.inflate(R.layout.genreslist, ((LinearLayout) findViewById(R.id.linearLayoutCards)), false);
+
             RecyclerView mRecyclerView;
 
-            mRecyclerView = (RecyclerView) findViewById(R.id.genresList);
+            mRecyclerView = (RecyclerView) list.findViewById(R.id.genresList);
 
             mRecyclerView.setHasFixedSize(true);
 
@@ -74,8 +90,6 @@ public class AboutAuthor extends AppCompatActivity {
             mRecyclerView.setAdapter(genresAdapter);
             for (GenresObject genresObject : ao.genresObjects)
                 genresAdapter.addItem(genresObject);
-        } else {
-            findViewById(R.id.genresFrame).setVisibility(View.GONE);
         }
     }
 
@@ -91,8 +105,9 @@ public class AboutAuthor extends AppCompatActivity {
     }
 
     public void openFullImage(View view) {
-        File file = ao.bigImage.getAsFile();
-        if (file == null) {
+        File file = new File(ImageHelper.DATA_PATH, "bigAuthor" + ao.idInDB);
+        if (file == null || !file.exists()) {
+
             Toast.makeText(this, getResources().getString(R.string.wait), Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent();

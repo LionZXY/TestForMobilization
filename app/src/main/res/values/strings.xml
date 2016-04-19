@@ -3,7 +3,7 @@
     <string name="app_name">Yandex.Mobilization</string>
     <string name="loading">Загрузка</string>
     <string name="list">Список авторов</string>
-    <string name="about">О Автор</string>
+    <string name="about">О Авторе</string>
 
     <!--Стандартные параметры-->
     <string name="default_genres">Неизвестный жанр</string>
@@ -12,7 +12,7 @@
     <string name="default_tracks">81</string>
     <string name="default_albums">22</string>
 
-    <!--Описания изобажний-->
+    <!--Описания изображений-->
     <string name="genres">Визуализация жанра</string>
     <string name="logo">Лого приложения</string>
     <string name="notfoundimage">Не найдено изображение для загрузки</string>

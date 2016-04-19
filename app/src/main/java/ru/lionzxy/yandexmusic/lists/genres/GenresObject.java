@@ -22,9 +22,6 @@ import ru.lionzxy.yandexmusic.LoadingActivity;
 import ru.lionzxy.yandexmusic.R;
 import ru.lionzxy.yandexmusic.exceptions.ErrorJsonFileException;
 import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
-import ru.lionzxy.yandexmusic.io.IRecieveImage;
-import ru.lionzxy.yandexmusic.io.ImageResource;
-
 /**
  * Created by nikit_000 on 14.04.2016.
  */
@@ -33,8 +30,7 @@ public class GenresObject implements Serializable {
 
     public int color;
     public long idInDB = -1L;
-    public String name, code, fullname;
-    public ImageResource smallImage = null, bigImage = null;
+    public String name, code, fullname, smallImage, bigImage;
 
     private GenresObject() {
         this.name = "Неизвестный жанр";
@@ -58,8 +54,8 @@ public class GenresObject implements Serializable {
 
         if (object.has("images")) {
             JSONObject images = object.getJSONObject("images");
-            smallImage = images.has("208x208") ? new ImageResource(false, "genres_" + code, images.getString("208x208")) : null;
-            bigImage = images.has("300x300") ? new ImageResource(true, "genres_" + code, images.getString("300x300")) : null;
+            smallImage = images.has("208x208") ? images.getString("208x208") : null;
+            bigImage = images.has("300x300") ? images.getString("300x300") : null;
         }
         LoadingActivity.genresHashMap.put(code, this);
     }
@@ -68,8 +64,8 @@ public class GenresObject implements Serializable {
         idInDB = cursor.getLong(cursor.getColumnIndex("rowid"));
 
         code = cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.CODE_COLUMN));
-        bigImage = new ImageResource(true, "genres_" + code, cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.BIG_IMAGE_LINK_COLUMN)));
-        smallImage = new ImageResource(false, "genres_" + code, cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.SMALL_IMAGE_LINK_COLUMN)));
+        bigImage = cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.BIG_IMAGE_LINK_COLUMN));
+        smallImage = cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.SMALL_IMAGE_LINK_COLUMN));
         color = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.COLOR_COLUMN));
         name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.NAME_COLUNM));
         fullname = cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.FULLNAME_COLUMN));
@@ -78,51 +74,11 @@ public class GenresObject implements Serializable {
         LoadingActivity.genresHashMapOnDBID.put(idInDB, this);
     }
 
-
-    public void setImageOnItemView(final Activity activity, final ImageView iv, boolean isBigPicture) {
-        final Animation vis = AnimationUtils.loadAnimation(activity, R.anim.alphavisible);
-        final Animation unvis = AnimationUtils.loadAnimation(activity, R.anim.alphaunvisible);
-        final ImageResource ir = isBigPicture ? bigImage == null ? smallImage : bigImage : smallImage == null ? bigImage : smallImage;
-        if (ir != null) {
-            ir.getImage(new IRecieveImage() {
-                @Override
-                public void recieveResource(final @Nullable Bitmap bitmap, final String name) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            iv.clearAnimation();
-                            if (name.substring(name.lastIndexOf("_") + 1).equals(String.valueOf(code))) {
-                                if (bitmap != null) {
-                                    new Handler().postDelayed(new Runnable() {
-                                        public void run() {
-                                            iv.setImageBitmap(bitmap);
-                                            iv.setAnimation(vis);
-                                        }
-                                    }, unvis.getDuration());
-                                    iv.setAlpha(1.0F);
-                                    iv.startAnimation(unvis);
-                                } else {
-                                    iv.startAnimation(vis);
-                                    iv.setAlpha(1.0F);
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            iv.setImageResource(R.drawable.notfoundmusic);
-            iv.startAnimation(vis);
-            iv.setAlpha(1.0F);
-        }
-    }
-
     public GenresObject putInDB(SQLiteDatabase mSqLiteDatabase) {
         ContentValues values = new ContentValues();
-        if (bigImage != null)
-            values.put(DatabaseHelper.GENRES_COLUMN.BIG_IMAGE_LINK_COLUMN, bigImage.getAsURL());
-        if (smallImage != null)
-            values.put(DatabaseHelper.GENRES_COLUMN.SMALL_IMAGE_LINK_COLUMN, smallImage.getAsURL());
+        
+		values.put(DatabaseHelper.GENRES_COLUMN.BIG_IMAGE_LINK_COLUMN, bigImage);
+        values.put(DatabaseHelper.GENRES_COLUMN.SMALL_IMAGE_LINK_COLUMN, smallImage);
         values.put(DatabaseHelper.GENRES_COLUMN.CODE_COLUMN, code);
         values.put(DatabaseHelper.GENRES_COLUMN.COLOR_COLUMN, color);
         values.put(DatabaseHelper.GENRES_COLUMN.FULLNAME_COLUMN, fullname);

@@ -24,7 +24,7 @@ public class GenresRecyclerAdapter extends RecyclerView.Adapter<GenresRecyclerVi
     @Override
     public GenresRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.genrelist, parent, false);
+        View itemView = inflater.inflate(R.layout.genrecard, parent, false);
         return new GenresRecyclerViewHolder((LinearLayout) itemView, activity);
     }
 

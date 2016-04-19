@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.lionzxy.yandexmusic.R;
+import ru.lionzxy.yandexmusic.lists.LockableRecyclerView;
 
 /**
  * Created by LionZXY on 09.04.16.
@@ -19,21 +20,24 @@ import ru.lionzxy.yandexmusic.R;
 public class AuthorRecyclerAdapter extends RecyclerView.Adapter<AuthorRecyclerViewHolder> {
     private List<AuthorObject> mData = new ArrayList<>();
     private Activity activity;
+    private LockableRecyclerView recyclerView;
 
-    public AuthorRecyclerAdapter(Activity activity) {
+    public AuthorRecyclerAdapter(Activity activity, LockableRecyclerView recyclerView) {
         this.activity = activity;
+        this.recyclerView = recyclerView;
     }
 
-    public AuthorRecyclerAdapter(Activity activity, List<AuthorObject> authorObjects) {
+    public AuthorRecyclerAdapter(Activity activity, List<AuthorObject> authorObjects, LockableRecyclerView recyclerView) {
         this.activity = activity;
         this.mData = authorObjects;
+        this.recyclerView = recyclerView;
     }
 
     @Override
     public AuthorRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.authorcard, parent, false);
-        return new AuthorRecyclerViewHolder((LinearLayout) itemView, activity);
+        return new AuthorRecyclerViewHolder((LinearLayout) itemView, activity, recyclerView);
     }
 
     @Override

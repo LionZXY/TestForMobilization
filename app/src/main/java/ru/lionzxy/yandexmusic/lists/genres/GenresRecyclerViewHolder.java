@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ru.lionzxy.yandexmusic.R;
+import com.squareup.picasso.*;
 
 /**
  * Created by LionZXY on 14.04.2016.
@@ -28,7 +29,8 @@ public class GenresRecyclerViewHolder extends RecyclerView.ViewHolder implements
 
     public GenresRecyclerViewHolder setItem(GenresObject go) {
         this.go = go;
-        go.setImageOnItemView(activity, ((ImageView) view.findViewById(R.id.genresPic)), false);
+		
+		Picasso.with(view.getContext()).load(go.smallImage).placeholder(R.drawable.notfoundmusic).into((ImageView) view.findViewById(R.id.genresPic));
         ((TextView) view.findViewById(R.id.genresName)).setText(go.name);
         return this;
     }

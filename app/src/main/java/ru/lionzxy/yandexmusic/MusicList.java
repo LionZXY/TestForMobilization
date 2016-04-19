@@ -9,10 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Window;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.lionzxy.yandexmusic.lists.LockableRecyclerView;
 import ru.lionzxy.yandexmusic.lists.author.AuthorObject;
 import ru.lionzxy.yandexmusic.lists.author.AuthorRecyclerAdapter;
 
@@ -25,18 +27,18 @@ public class MusicList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_list);
 
-        RecyclerView mRecyclerView;
+        LockableRecyclerView mRecyclerView;
         RecyclerView.LayoutManager mLayoutManager;
 
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        mRecyclerView = (LockableRecyclerView) findViewById(R.id.recyclerview);
 
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new AuthorRecyclerAdapter(this, LoadingActivity.authorObjects);
+        mAdapter = new AuthorRecyclerAdapter(this, LoadingActivity.authorObjects, mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
         checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.INTERNET");

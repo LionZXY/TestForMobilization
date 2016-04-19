@@ -25,11 +25,10 @@
                 android:layout_marginTop="10dp"
                 card_view:cardBackgroundColor="#BFBFBF">
 
-                <ImageView
+                <ru.lionzxy.yandexmusic.views.AnimatedImageView
                     android:id="@+id/genresPic"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:alpha="0.3"
                     android:contentDescription="@string/genres"
                     android:scaleType="fitCenter"
                     android:src="@drawable/notfoundmusic" />
