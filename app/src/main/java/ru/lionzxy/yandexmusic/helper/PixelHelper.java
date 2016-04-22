@@ -1,7 +1,6 @@
 package ru.lionzxy.yandexmusic.helper;
 
 import android.content.res.Resources;
-import android.test.mock.MockResources;
 import android.util.TypedValue;
 
 /**

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -22,7 +21,7 @@ import java.io.File;
 import ru.lionzxy.yandexmusic.collections.recyclerviews.RecyclerViewAdapter;
 import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.AuthorObject;
 import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.GenresObject;
-import ru.lionzxy.yandexmusic.helper.ImageHelper;
+import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
 import ru.lionzxy.yandexmusic.views.AnimatedImageView;
 
 /**
@@ -38,54 +37,63 @@ public class AboutAuthor extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_author);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent intent = getIntent();
         ao = intent.hasExtra("authorObject") ? (AuthorObject) intent.getSerializableExtra("authorObject") : AuthorObject.UNKNOWN;
 
-        final AnimatedImageView image = (AnimatedImageView) findViewById(R.id.imageView);
-
-        ImageHelper.setImageOnImageView(image, ao.bigImage, "bigAuthor" + ao.idInDB);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (ao.link == null || ao.link.length() == 0)
-            fab.hide();
-        else {
-            fab.attachToScrollView((ObservableScrollView) findViewById(R.id.scrollViewList));
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ao.link));
-                    startActivity(browserIntent);
-                }
-            });
+        //Set content
+        try {
+            final AnimatedImageView image = (AnimatedImageView) findViewById(R.id.imageView);
+            ao.setImage(image, true);
+            TextView descr = (TextView) findViewById(R.id.description);
+            ((TextView) findViewById(R.id.head_author)).setText(ao.name);
+            ((TextView) findViewById(R.id.trackscol)).setText(String.valueOf(ao.tracks));
+            ((TextView) findViewById(R.id.albumscol)).setText(String.valueOf(ao.albums));
+            descr.setText(ao.description);
+            findViewById(R.id.additionalInfo).startAnimation(AnimationUtils.loadAnimation(this, R.anim.alphavisible));
+        } catch (Exception e) {
+            new ContextDialogException(AboutAuthor.this, e);
         }
-        TextView descr = (TextView) findViewById(R.id.description);
-        ((TextView) findViewById(R.id.head_author)).setText(ao.name);
-        ((TextView) findViewById(R.id.trackscol)).setText(String.valueOf(ao.tracks));
-        ((TextView) findViewById(R.id.albumscol)).setText(String.valueOf(ao.albums));
-        descr.setText(ao.description);
 
-        findViewById(R.id.additionalInfo).startAnimation(AnimationUtils.loadAnimation(this, R.anim.alphavisible));
+        try {
+            if (ao.genresObjects.size() > 0) {
+                View list = getLayoutInflater().inflate(R.layout.genreslist, null, false);
+                ((LinearLayout) findViewById(R.id.linearLayoutCards)).addView(list);
+                RecyclerView mRecyclerView;
 
-        if (ao.genresObjects.size() > 0) {
-            View list = getLayoutInflater().inflate(R.layout.genreslist, null, false);
-            ((LinearLayout) findViewById(R.id.linearLayoutCards)).addView(list);
-            RecyclerView mRecyclerView;
+                mRecyclerView = (RecyclerView) list.findViewById(R.id.genresList);
+                mRecyclerView.setHasFixedSize(true);
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(R.layout.genrecard);
+                mRecyclerView.setAdapter(recyclerViewAdapter);
 
-            mRecyclerView = (RecyclerView) list.findViewById(R.id.genresList);
-
-            mRecyclerView.setHasFixedSize(true);
-
-            LinearLayoutManager layoutManager
-                    = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            mRecyclerView.setLayoutManager(layoutManager);
-
-            RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(R.layout.genrecard);
-
-            mRecyclerView.setAdapter(recyclerViewAdapter);
-            for (GenresObject genresObject : ao.genresObjects)
-                recyclerViewAdapter.addItem(genresObject);
+                for (GenresObject genresObject : ao.genresObjects)
+                    recyclerViewAdapter.addItem(genresObject);
+            }
+        } catch (Exception e) {
+            new ContextDialogException(AboutAuthor.this, e);
         }
+
+        try {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            if (ao.link == null || ao.link.length() == 0)
+                fab.hide();
+            else {
+                fab.attachToScrollView((ObservableScrollView) findViewById(R.id.scrollViewList));
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ao.link));
+                        startActivity(browserIntent);
+                    }
+                });
+            }
+        } catch (Exception e) {
+            new ContextDialogException(AboutAuthor.this, e);
+        }
+
     }
 
     @Override
@@ -100,9 +108,8 @@ public class AboutAuthor extends AppCompatActivity {
     }
 
     public void openFullImage(View view) {
-        File file = new File(ImageHelper.DATA_PATH, "bigAuthor" + ao.idInDB);
+        File file = ao.getFile(true);
         if (file == null || !file.exists()) {
-
             Toast.makeText(this, getResources().getString(R.string.wait), Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent();

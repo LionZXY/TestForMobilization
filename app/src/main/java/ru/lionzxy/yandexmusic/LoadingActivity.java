@@ -30,18 +30,24 @@ import java.util.List;
 
 import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.AuthorObject;
 import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.GenresObject;
+import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
 import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
-import ru.lionzxy.yandexmusic.helper.ImageHelper;
+import ru.lionzxy.yandexmusic.io.ImageResource;
 
 /**
  * Created by LionZXY on 16.04.2016.
  * YandexMusic
  */
 public class LoadingActivity extends AppCompatActivity {
+    private static final String TAG = "YaMobLoading";
+    public static final String SHAREDTAG = "YandexMobil";
     public static List<AuthorObject> authorObjects = new ArrayList<>();
     public static HashMap<String, GenresObject> genresHashMap = new HashMap<>();
     public static HashMap<Long, GenresObject> genresHashMapOnDBID = new HashMap<>();
-    private DatabaseHelper mDatabaseHelper;
+    public static DatabaseHelper databaseHelper = null;
+
+    private HashMap<Integer, AuthorObject> testForNullHashMap = new HashMap<>();
+    public SQLiteDatabase databaseSql;
     private RoundCornerProgressBar progress;
 
     static {
@@ -53,44 +59,33 @@ public class LoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
 
-        ImageHelper.imageLoader.init(ImageLoaderConfiguration.createDefault(getApplicationContext()));
+        ImageResource.imageLoader.init(ImageLoaderConfiguration.createDefault(LoadingActivity.this));
 
         progress = (RoundCornerProgressBar) findViewById(R.id.progressBar);
         progress.setProgressColor(getResources().getColor(R.color.colorPrimary));
         progress.setProgressBackgroundColor(Color.parseColor("#BFBFBF"));
         progress.setSecondaryProgressColor(getResources().getColor(R.color.colorPrimaryDark));
-        progress.setSecondaryProgress(480);
         progress.setMax(1000);
-        progress.setProgress(400);
-        mDatabaseHelper = new DatabaseHelper(this);
+        databaseHelper = new DatabaseHelper(this);
 
-        final SharedPreferences sp = getSharedPreferences(getApplicationContext().getPackageName(), MODE_APPEND);
+        final SharedPreferences sp = getSharedPreferences(LoadingActivity.this.getPackageName(), MODE_APPEND);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                SQLiteDatabase sdb = mDatabaseHelper.getReadableDatabase();
+                databaseSql = databaseHelper.getReadableDatabase();
                 mHandler.obtainMessage(3, getResources().getString(R.string.load1)).sendToTarget();
-                loadGenresFromDatabase(sdb);
+                loadGenresFromDatabase(databaseSql);
                 mHandler.obtainMessage(3, getResources().getString(R.string.load2)).sendToTarget();
-                loadAuthorsFromDatabase(sdb);
+                loadAuthorsFromDatabase(databaseSql);
 
                 mHandler.obtainMessage(3, getResources().getString(R.string.load3)).sendToTarget();
-                sdb = mDatabaseHelper.getWritableDatabase();
+                databaseSql = databaseHelper.getWritableDatabase();
                 try {
+                    //Yandex.Music don't support file size
                     HttpURLConnection urlConnection = (HttpURLConnection) new URL("https://api.music.yandex.net/genres").openConnection();
                     urlConnection.connect();
-                    int file_size = urlConnection.getContentLength();
-                    downloadGenres(urlConnection, sdb);
-
-                    //Yandex.Music don't support file size
-                   /* if (!sp.contains("genressize")) {
-                        sp.edit().putInt("genressize", file_size).apply();
-                    } else {
-                        if (sp.getInt("genressize", 0) != file_size) {
-
-                        } else urlConnection.disconnect();
-                    }*/
+                    downloadGenres(urlConnection);
                 } catch (Exception e) {
                     Log.e("Genres", "Error while connect to internet", e);
                 }
@@ -106,16 +101,22 @@ public class LoadingActivity extends AppCompatActivity {
                         if (sp.getInt("auhtorsize", 0) == file_size) {
                             urlConnection.disconnect();
                         } else {
-                            downloadAuthors(urlConnection, sdb, file_size);
+                            downloadAuthors(urlConnection, file_size);
                             sp.edit().putInt("auhtorsize", file_size).apply();
                         }
                     } else {
-                        downloadAuthors(urlConnection, sdb, file_size);
+                        downloadAuthors(urlConnection, file_size);
                         sp.edit().putInt("auhtorsize", file_size).apply();
                     }
+
+                    urlConnection.disconnect();
                 } catch (Exception e) {
-                    Log.e("Authors", "Error while connect to internet", e);
+                    Log.e(TAG, "Error while connect to internet", e);
                 }
+
+                databaseSql.close();
+                testForNullHashMap = null;
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -157,9 +158,12 @@ public class LoadingActivity extends AppCompatActivity {
         cursor.moveToFirst();
         while (cursor.moveToNext()) {
             try {
-                new GenresObject(cursor);
+                GenresObject genresObject = new GenresObject(cursor);
+                genresHashMap.put(genresObject.code, genresObject);
+                genresHashMapOnDBID.put(genresObject.idInDB, genresObject);
             } catch (Exception e) {
-                Log.e("Genres", "Error while add from database", e);
+                Log.e(TAG, "Error while add from database", e);
+                new ContextDialogException(LoadingActivity.this, e, R.string.error_data_load);
             }
         }
         cursor.close();
@@ -171,15 +175,17 @@ public class LoadingActivity extends AppCompatActivity {
         cursor.moveToFirst();
         while (cursor.moveToNext()) {
             try {
-                authorObjects.add(new AuthorObject(cursor));
+                AuthorObject authorObject = new AuthorObject(cursor);
+                authorObjects.add(authorObject);
+                testForNullHashMap.put(authorObject.authorId, authorObject);
             } catch (Exception e) {
-                Log.e("Auhtors", "Error while add from database", e);
+                Log.e(TAG, "Error while add from database", e);
             }
         }
         cursor.close();
     }
 
-    public void downloadGenres(final HttpURLConnection urlConnection, SQLiteDatabase sdb) {
+    public void downloadGenres(final HttpURLConnection urlConnection) {
         try {
             urlConnection.setConnectTimeout(5000);
             urlConnection.setRequestMethod("GET");
@@ -201,18 +207,18 @@ public class LoadingActivity extends AppCompatActivity {
 
             JSONArray arr = new JSONObject(str).getJSONArray("result");
             for (int i = 0; i < arr.length(); i++) {
-                JSONObject object = arr.getJSONObject(i);
-                if (genresHashMap.get(object.getString("id")) == null)
-                    new GenresObject(object).putInDB(sdb);
+                addGenreFromJsonObject(arr.getJSONObject(i));
                 mHandler.obtainMessage(1, (int) ((i * 500) / arr.length())).sendToTarget();
             }
+
             urlConnection.disconnect();
         } catch (Exception e) {
-            Log.e("Genres", "Error while genres download", e);
+            Log.e(TAG, "Error while genres download", e);
+            new ContextDialogException(LoadingActivity.this, e, R.string.error_data_load);
         }
     }
 
-    public void downloadAuthors(HttpURLConnection urlConnection, SQLiteDatabase sdb, long file_size) {
+    public void downloadAuthors(HttpURLConnection urlConnection, long file_size) {
         try {
             urlConnection.setConnectTimeout(5000);
             urlConnection.setRequestMethod("GET");
@@ -234,22 +240,54 @@ public class LoadingActivity extends AppCompatActivity {
 
             JSONArray arr = new JSONArray(str);
             for (int i = 0; i < arr.length(); i++) {
-                JSONObject object = arr.getJSONObject(i);
-                if (!isContains(object.getInt("id")))
-                    authorObjects.add(new AuthorObject(object).putInDB(sdb));
+                addAuthorFromJsonObject(arr.getJSONObject(i));
                 mHandler.obtainMessage(1, (int) ((i * 500) / arr.length()) + 500).sendToTarget();
             }
             urlConnection.disconnect();
         } catch (Exception e) {
-            Log.e("Authors", "Error while authors download", e);
+            Log.e(TAG, "Error while authors download", e);
         }
     }
 
-    public static boolean isContains(int id) {
-        for (int j = 0; j < authorObjects.size(); j++)
-            if (authorObjects.get(j).authorId == id)
+    public boolean addAuthorFromJsonObject(JSONObject jsonObject) {
+        try {
+            if (jsonObject == null)
+                return false;
+
+            AuthorObject authorObject = new AuthorObject(jsonObject);
+            if (testForNullHashMap.get(authorObject.authorId) == null) {
+                testForNullHashMap.put(authorObject.authorId, authorObject);
+                authorObjects.add(authorObject);
+                authorObject.putInDB(databaseSql);
                 return true;
-        return false;
+            } else return false;
+        } catch (Exception e) {
+            Log.e(TAG, "Error on parse author from json object", e);
+            return false;
+        }
+    }
+
+    public boolean addGenreFromJsonObject(JSONObject jsonObject) {
+        try {
+            if (jsonObject == null)
+                return false;
+
+            if (jsonObject.has("subGenres")) {
+                JSONArray array = jsonObject.getJSONArray("subGenres");
+                for (int i = 0; i < array.length(); i++)
+                    addGenreFromJsonObject(array.getJSONObject(i));
+            }
+
+            GenresObject genresObject = new GenresObject(jsonObject);
+            if (genresHashMap.get(genresObject.code) == null) {
+                genresHashMap.put(genresObject.code, genresObject);
+                genresObject.putInDB(databaseSql);
+                return true;
+            } else return false;
+        } catch (Exception e) {
+            Log.e(TAG, "Error on parse genre from json object", e);
+            return false;
+        }
     }
 
 }

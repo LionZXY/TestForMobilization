@@ -14,12 +14,11 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-import ru.lionzxy.yandexmusic.LoadingActivity;
 import ru.lionzxy.yandexmusic.R;
 import ru.lionzxy.yandexmusic.exceptions.ErrorJsonFileException;
 import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
-import ru.lionzxy.yandexmusic.helper.ImageHelper;
 import ru.lionzxy.yandexmusic.interfaces.IListElement;
+import ru.lionzxy.yandexmusic.io.ImageResource;
 
 /**
  * Created by nikit_000 on 14.04.2016.
@@ -29,7 +28,8 @@ public class GenresObject implements Serializable, IListElement {
 
     public int color;
     public long idInDB = -1L;
-    public String name, code, fullname, smallImage, bigImage;
+    public String name, code, fullname;
+    public ImageResource bigImage, smallImage;
 
     private GenresObject() {
         this.name = "Неизвестный жанр";
@@ -53,31 +53,31 @@ public class GenresObject implements Serializable, IListElement {
 
         if (object.has("images")) {
             JSONObject images = object.getJSONObject("images");
-            smallImage = images.has("208x208") ? images.getString("208x208") : null;
-            bigImage = images.has("300x300") ? images.getString("300x300") : null;
+            smallImage = images.has("208x208") ? new ImageResource(images.getString("208x208"), "smallGenre" + code) : null;
+            bigImage = images.has("300x300") ? new ImageResource(images.getString("300x300"), "bigGenre" + code) : null;
         }
-        LoadingActivity.genresHashMap.put(code, this);
     }
 
     public GenresObject(Cursor cursor) {
         idInDB = cursor.getLong(cursor.getColumnIndex("rowid"));
 
         code = cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.CODE_COLUMN));
-        bigImage = cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.BIG_IMAGE_LINK_COLUMN));
-        smallImage = cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.SMALL_IMAGE_LINK_COLUMN));
+        bigImage = new ImageResource(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.BIG_IMAGE_LINK_COLUMN)), "bigGenre" + code);
+        smallImage = new ImageResource(cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.SMALL_IMAGE_LINK_COLUMN)), "smallGenre" + code);
+
         color = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.COLOR_COLUMN));
         name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.NAME_COLUNM));
         fullname = cursor.getString(cursor.getColumnIndex(DatabaseHelper.GENRES_COLUMN.FULLNAME_COLUMN));
 
-        LoadingActivity.genresHashMap.put(code, this);
-        LoadingActivity.genresHashMapOnDBID.put(idInDB, this);
     }
 
     public GenresObject putInDB(SQLiteDatabase mSqLiteDatabase) {
         ContentValues values = new ContentValues();
 
-        values.put(DatabaseHelper.GENRES_COLUMN.BIG_IMAGE_LINK_COLUMN, bigImage);
-        values.put(DatabaseHelper.GENRES_COLUMN.SMALL_IMAGE_LINK_COLUMN, smallImage);
+        if (bigImage != null)
+            values.put(DatabaseHelper.GENRES_COLUMN.BIG_IMAGE_LINK_COLUMN, bigImage.getImageUrl());
+        if (smallImage != null)
+            values.put(DatabaseHelper.GENRES_COLUMN.SMALL_IMAGE_LINK_COLUMN, smallImage.getImageUrl());
         values.put(DatabaseHelper.GENRES_COLUMN.CODE_COLUMN, code);
         values.put(DatabaseHelper.GENRES_COLUMN.COLOR_COLUMN, color);
         values.put(DatabaseHelper.GENRES_COLUMN.FULLNAME_COLUMN, fullname);
@@ -89,8 +89,10 @@ public class GenresObject implements Serializable, IListElement {
     }
 
     @Override
-    public void setImage(ImageView imageView) {
-        ImageHelper.setImageOnImageView(imageView, smallImage, "smallGenre" + code);
+    public void setImage(ImageView imageView, boolean isBig) {
+        ImageResource imageResource = (isBig ? (bigImage == null ? smallImage : bigImage) : (smallImage == null ? bigImage : smallImage));
+        if (imageResource != null)
+            imageResource.setImageOnImageView(imageView);
     }
 
     @Override

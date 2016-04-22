@@ -9,7 +9,7 @@ import android.widget.ImageView;
  */
 public interface IListElement extends View.OnClickListener{
 
-    void setImage(ImageView imageView);
+    void setImage(ImageView imageView, boolean isBig);
 
     void setItem(View view);
 }

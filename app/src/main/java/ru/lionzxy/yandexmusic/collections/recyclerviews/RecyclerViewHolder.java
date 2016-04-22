@@ -27,7 +27,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
             return this;
 
         if (imageView != null)
-            listElement.setImage(imageView);
+            listElement.setImage(imageView, false);
 
         view.findViewById(R.id.card_view).setOnClickListener(listElement);
         listElement.setItem(view);

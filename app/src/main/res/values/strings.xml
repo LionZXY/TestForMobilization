@@ -28,4 +28,13 @@
 
     <string name="tracks">Треков:</string>
     <string name="albums">Альбомов:</string>
+
+    <!--Диалоговое окно ошибки-->
+    <string name="error_add_default">Просьба уведомить об этом вопиющем недоразумении авторам программы. А пока можете решить как наказывать за этот поступок наших программистов.</string>
+    <string name="error_add_choise1">Понять и простить</string>
+    <string name="error_add_choise2">Наказать зарплатой</string>
+    <string name="error_add_choise3">Уволить к чертям!</string>
+    <string name="error_default">В программе произошла ошибка! </string>
+    <string name="error_image_load">Произошла ошибка про загрузке изображения. </string>
+    <string name="error_data_load">Произошла ошибка чтения данных. </string>
 </resources>

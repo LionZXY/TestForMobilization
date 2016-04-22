@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +25,9 @@ import ru.lionzxy.yandexmusic.R;
 import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
 import ru.lionzxy.yandexmusic.exceptions.ErrorJsonFileException;
 import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
-import ru.lionzxy.yandexmusic.helper.ImageHelper;
 import ru.lionzxy.yandexmusic.helper.TextHelper;
 import ru.lionzxy.yandexmusic.interfaces.IListElement;
+import ru.lionzxy.yandexmusic.io.ImageResource;
 
 /**
  * Created by LionZXY on 09.04.16.
@@ -37,7 +37,8 @@ import ru.lionzxy.yandexmusic.interfaces.IListElement;
 public class AuthorObject implements Serializable, IListElement, View.OnClickListener {
     public static final AuthorObject UNKNOWN = new AuthorObject();
     public List<GenresObject> genresObjects = new ArrayList<>();
-    public String name, description, link, bigImage, smallImage;
+    public String name, description, link;
+    public ImageResource bigImage, smallImage;
     public int authorId = 1, tracks = -1, albums = -1;
     public long idInDB = -1L;
 
@@ -58,8 +59,8 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
         idInDB = cursor.getLong(cursor.getColumnIndex("rowid"));
 
         authorId = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.AUTHOR_COLUMN.AUTHOR_ID_COLUMN));
-        bigImage = cursor.getString(cursor.getColumnIndex(DatabaseHelper.AUTHOR_COLUMN.BIG_IMAGE_LINK_COLUMN));
-        smallImage = cursor.getString(cursor.getColumnIndex(DatabaseHelper.AUTHOR_COLUMN.SMALL_IMAGE_LINK_COLUMN));
+        bigImage = new ImageResource(cursor.getString(cursor.getColumnIndex(DatabaseHelper.AUTHOR_COLUMN.BIG_IMAGE_LINK_COLUMN)), "bigAuthor" + authorId);
+        smallImage = new ImageResource(cursor.getString(cursor.getColumnIndex(DatabaseHelper.AUTHOR_COLUMN.SMALL_IMAGE_LINK_COLUMN)), "smallAuthor" + authorId);
 
         albums = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.AUTHOR_COLUMN.ALBUMS_INT_COLUMN));
         tracks = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.AUTHOR_COLUMN.TRACKS_INT_COLUMN));
@@ -102,8 +103,8 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
 
         if (jsonObject.has("cover")) {
             JSONObject covers = jsonObject.getJSONObject("cover");
-            smallImage = covers.has("small") ? covers.getString("small") : UNKNOWN.smallImage;
-            bigImage = covers.has("big") ? covers.getString("big") : UNKNOWN.bigImage;
+            smallImage = covers.has("small") ? new ImageResource(covers.getString("small"), "smallAuthor" + authorId) : UNKNOWN.smallImage;
+            bigImage = covers.has("big") ? new ImageResource(covers.getString("big"), "bigAuthor" + authorId) : UNKNOWN.bigImage;
         }
     }
 
@@ -115,9 +116,9 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
         values.put(DatabaseHelper.AUTHOR_COLUMN.AUTHOR_ID_COLUMN, authorId);
         values.put(DatabaseHelper.AUTHOR_COLUMN.TRACKS_INT_COLUMN, tracks);
         if (bigImage != null)
-            values.put(DatabaseHelper.AUTHOR_COLUMN.BIG_IMAGE_LINK_COLUMN, bigImage);
+            values.put(DatabaseHelper.AUTHOR_COLUMN.BIG_IMAGE_LINK_COLUMN, bigImage.getImageUrl());
         if (smallImage != null)
-            values.put(DatabaseHelper.AUTHOR_COLUMN.SMALL_IMAGE_LINK_COLUMN, smallImage);
+            values.put(DatabaseHelper.AUTHOR_COLUMN.SMALL_IMAGE_LINK_COLUMN, smallImage.getImageUrl());
         values.put(DatabaseHelper.AUTHOR_COLUMN.DESCRIPTION_COLUMN, description);
         values.put(DatabaseHelper.AUTHOR_COLUMN.NAME_COLUNM, name);
         values.put(DatabaseHelper.AUTHOR_COLUMN.LINK_COLUMN, link);
@@ -137,8 +138,14 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
 
 
     @Override
-    public void setImage(ImageView imageView) {
-        ImageHelper.setImageOnImageView(imageView, smallImage, "smallAuthor" + authorId);
+    public void setImage(ImageView imageView, boolean isBig) {
+        ImageResource imageResource = (isBig ? (bigImage == null ? smallImage : bigImage) : (smallImage == null ? bigImage : smallImage));
+        if (imageResource != null)
+            imageResource.setImageOnImageView(imageView);
+    }
+
+    public File getFile(boolean isBig) {
+        return (isBig ? (bigImage == null ? smallImage : bigImage) : (smallImage == null ? bigImage : smallImage)).getImageFile();
     }
 
     @Override
@@ -147,7 +154,7 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
 
         //Clear
         imageView.clearAnimation();
-        imageView.setImageResource(R.drawable.notfoundmusic);
+        //imageView.setImageResource(R.drawable.notfoundmusic);
 
         //Set content
         ((TextView) view.findViewById(R.id.description)).setText(description);
@@ -169,86 +176,5 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
         } catch (Exception e) {
             new ContextDialogException(context, e);
         }
-
-        /*
-        //TODO view animation
-        recyclerView.setLock(true);
-
-        final Animation unVisible = AnimationUtils.loadAnimation(view.getContext(), R.anim.alphaunvisible);
-        unVisible.setFillAfter(true);
-        final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-        for (int i = 0; i < layoutManager.getChildCount(); i++) {
-            final View childView = layoutManager.getChildAt(i);
-            childView.findViewById(R.id.card_view).setOnClickListener(null);
-            if (childView != view) {
-                childView.startAnimation(unVisible);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        childView.setAlpha(0.0F);
-                    }
-                }, unVisible.getDuration());
-            }
-        }
-
-        float thisY = - view.getY() - recyclerView.getY();
-        final TranslateAnimation animation = new TranslateAnimation(0, 0, 0, thisY);
-        animation.setDuration(unVisible.getDuration());
-        animation.setFillAfter(true);
-        view.findViewById(R.id.description).startAnimation(unVisible);
-        view.startAnimation(animation);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Resize cardview
-                int textSize = (int) PixelHelper.pixelFromDP(view.getResources(), 60);
-                CardView cv = (CardView) view.findViewById(R.id.card_view);
-                ResizeAnimation resizeAnimation = new ResizeAnimation(cv, (int) PixelHelper.pixelFromDP(cv.getResources(), 250), cv.getWidth());
-                resizeAnimation.setFillAfter(true);
-                resizeAnimation.setDuration(unVisible.getDuration());
-                cv.startAnimation(resizeAnimation);
-
-                //Move image
-                ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
-                final NormalTranslateAnimation translateAnimation = new NormalTranslateAnimation(imageView, PixelHelper.pixelFromDP(imageView.getResources(), 2), textSize + (int) PixelHelper.pixelFromDP(cv.getResources(), 10));
-                translateAnimation.setDuration(unVisible.getDuration());
-                translateAnimation.setFillAfter(true);
-                imageView.startAnimation(translateAnimation);
-
-                //Resize text
-                final TextView textView = (TextView) view.findViewById(R.id.head_author);
-                ResizeTextAnimation resizeTextAnimation = new ResizeTextAnimation(textView, 50F);
-                resizeTextAnimation.setDuration(unVisible.getDuration());
-                resizeTextAnimation.setFillBefore(true);
-                textView.startAnimation(resizeTextAnimation);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        final CardView cv = (CardView) view.findViewById(R.id.card_view);
-
-                        //Resize image
-                        ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
-                        int newSize = (int) PixelHelper.pixelFromDP(imageView.getResources(), 180);
-                        ResizeAnimation resizeImageAnimation = new ResizeAnimation(imageView, newSize, newSize);
-                        resizeImageAnimation.setDuration(unVisible.getDuration());
-                        resizeImageAnimation.setFillAfter(true);
-                        imageView.startAnimation(resizeImageAnimation);
-
-                        //Move text
-                        final TextView textViewHead = (TextView) view.findViewById(R.id.head_author);
-                        NormalTranslateAnimation normalTranslateAnimation = new NormalTranslateAnimation(textViewHead, 0 - PixelHelper.pixelFromDP(imageView.getResources(), 90), textViewHead.getY());
-                        normalTranslateAnimation.setDuration(unVisible.getDuration());
-                        normalTranslateAnimation.setFillAfter(true);
-                        textViewHead.startAnimation(normalTranslateAnimation);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                openAboutAuthor();
-                            }
-                        }, unVisible.getDuration());
-                    }
-                }, unVisible.getDuration());
-            }
-        }, animation.getDuration());*/
     }
 }
