@@ -42,11 +42,13 @@ public class ImageResource implements Serializable {
     }
 
     /**
-     * Download and save image.
+     * Download and save image with special resolution
      *
      * @param imageView
+     * @param width save width bitmap. Use for low size
+     * @param height save height bitmap. Use for low size
      */
-    public void setImageOnImageView(final ImageView imageView) {
+    public void setImageOnImageView(final ImageView imageView, final int width, final int height) {
         DisplayImageOptions options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading).showImageOnFail(R.drawable.notfoundmusic).build();
 
         switch (imageResourceType) {
@@ -71,20 +73,7 @@ public class ImageResource implements Serializable {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                try {
-                                    if (!imageFile.getParentFile().exists())
-                                        imageFile.getParentFile().mkdirs();
-                                    imageFile.createNewFile();
-
-                                    FileOutputStream fos = new FileOutputStream(imageFile);
-                                    loadedImage.compress(Bitmap.CompressFormat.PNG, 70, fos);
-                                    fos.flush();
-                                    fos.close();
-
-                                    imageResourceType = ImageResourceType.LOCAL_STORAGE;
-                                } catch (Exception e) {
-                                    Log.e("ImageSaver", "Error while save image", e);
-                                }
+                                saveImage(loadedImage, width, height);
                             }
                         }).start();
                     }
@@ -97,6 +86,37 @@ public class ImageResource implements Serializable {
             }
         }
     }
+
+    public void setImageOnImageView(final ImageView imageView) {
+        setImageOnImageView(imageView, 0, 0);
+    }
+
+    public void setImageOnImageView(final ImageView imageView, boolean fit) {
+        if (fit)
+            setImageOnImageView(imageView, imageView.getWidth(), imageView.getHeight());
+        else setImageOnImageView(imageView);
+    }
+
+    private void saveImage(Bitmap bitmap, int width, int height) {
+        try {
+            if (width > 0 || height > 0)
+                bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+
+            if (!imageFile.getParentFile().exists())
+                imageFile.getParentFile().mkdirs();
+            imageFile.createNewFile();
+
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 70, fos);
+            fos.flush();
+            fos.close();
+
+            imageResourceType = ImageResourceType.LOCAL_STORAGE;
+        } catch (Exception e) {
+            Log.e("ImageSaver", "Error while save image", e);
+        }
+    }
+
 
     public File getImageFile() {
         return imageFile;

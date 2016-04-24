@@ -26,12 +26,13 @@ public class AnimatedImageView extends ImageView {
     @Override
     public void setImageDrawable(Drawable d) {
         clearAnimation();
+        float startAlpha = getAlpha();
         setAlpha(0.1F);
 
         super.setImageDrawable(d);
 
         startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.alphavisible));
-        setAlpha(1.0F);
+        setAlpha(startAlpha);
     }
 
 

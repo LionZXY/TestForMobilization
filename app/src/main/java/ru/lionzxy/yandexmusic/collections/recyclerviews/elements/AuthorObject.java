@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,7 +26,9 @@ import ru.lionzxy.yandexmusic.LoadingActivity;
 import ru.lionzxy.yandexmusic.R;
 import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
 import ru.lionzxy.yandexmusic.exceptions.ErrorJsonFileException;
+import ru.lionzxy.yandexmusic.helper.ColorHelper;
 import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
+import ru.lionzxy.yandexmusic.helper.PixelHelper;
 import ru.lionzxy.yandexmusic.helper.TextHelper;
 import ru.lionzxy.yandexmusic.interfaces.IListElement;
 import ru.lionzxy.yandexmusic.io.ImageResource;
@@ -39,7 +43,7 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
     public List<GenresObject> genresObjects = new ArrayList<>();
     public String name, description, link;
     public ImageResource bigImage, smallImage;
-    public int authorId = 1, tracks = -1, albums = -1;
+    public int authorId = 1, tracks = -1, albums = -1, color = 0;
     public long idInDB = -1L;
 
     private AuthorObject() {
@@ -70,12 +74,16 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
         link = cursor.getString(cursor.getColumnIndex(DatabaseHelper.AUTHOR_COLUMN.LINK_COLUMN));
         String tmpGenres = cursor.getString(cursor.getColumnIndex(DatabaseHelper.AUTHOR_COLUMN.GENRES_INT_ARR_COLUMN));
         if (tmpGenres != null) {
+            List<Integer> colors = new ArrayList<>();
             String tmpGenresString[] = tmpGenres.split(",");
             for (String str : tmpGenresString) {
                 GenresObject ge = LoadingActivity.genresHashMapOnDBID.get(Long.parseLong(str));
-                if (ge != null)
+                if (ge != null) {
                     genresObjects.add(ge);
+                    colors.add(ge.color);
+                }
             }
+            color = ColorHelper.mixColors(colors);
         }
     }
 
@@ -141,7 +149,8 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
     public void setImage(ImageView imageView, boolean isBig) {
         ImageResource imageResource = (isBig ? (bigImage == null ? smallImage : bigImage) : (smallImage == null ? bigImage : smallImage));
         if (imageResource != null)
-            imageResource.setImageOnImageView(imageView);
+            imageResource.setImageOnImageView(imageView, true);
+
     }
 
     public File getFile(boolean isBig) {
@@ -159,6 +168,12 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
         //Set content
         ((TextView) view.findViewById(R.id.description)).setText(description);
         ((TextView) view.findViewById(R.id.head_author)).setText(name);
+        GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.BL_TR, new int[]{color, Color.WHITE});
+        gradientDrawable.setGradientType(GradientDrawable.RADIAL_GRADIENT);
+        gradientDrawable.setGradientCenter(0.2F, 0.5F);
+        gradientDrawable.setGradientRadius(PixelHelper.pixelFromDP(view.getResources(), 100));
+        ((ImageView) view.findViewById(R.id.cardViewBackground)).setImageDrawable(gradientDrawable);
+        ((ImageView) view.findViewById(R.id.cardViewBackground)).setAlpha(0.6F);
     }
 
 

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -92,12 +93,16 @@ public class GenresObject implements Serializable, IListElement {
     public void setImage(ImageView imageView, boolean isBig) {
         ImageResource imageResource = (isBig ? (bigImage == null ? smallImage : bigImage) : (smallImage == null ? bigImage : smallImage));
         if (imageResource != null)
-            imageResource.setImageOnImageView(imageView);
+            imageResource.setImageOnImageView(imageView, true);
     }
 
     @Override
     public void setItem(View view) {
         ((TextView) view.findViewById(R.id.genresName)).setText(name);
+
+        GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TR_BL, new int[]{color, Color.WHITE});
+        ((ImageView) view.findViewById(R.id.cardViewBackground)).setImageDrawable(gradientDrawable);
+        ((ImageView) view.findViewById(R.id.cardViewBackground)).setAlpha(0.3F);
     }
 
     @Override

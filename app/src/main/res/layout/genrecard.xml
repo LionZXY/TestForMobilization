@@ -14,43 +14,56 @@
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground">
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginTop="10dp"
-                card_view:cardBackgroundColor="#BFBFBF">
+            <ru.lionzxy.yandexmusic.views.AnimatedImageView
+                android:id="@+id/cardViewBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-                <ru.lionzxy.yandexmusic.views.AnimatedImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/genres"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/notfoundmusic" />
-            </android.support.v7.widget.CardView>
-        </FrameLayout>
+            <FrameLayout
+                android:id="@+id/genresFrame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/genresName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginStart="4dp"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="@string/default_genres"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="13sp" />
+                <android.support.v7.widget.CardView
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    card_view:cardBackgroundColor="#BFBFBF">
+
+                    <ru.lionzxy.yandexmusic.views.AnimatedImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/genres"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/notfoundmusic" />
+                </android.support.v7.widget.CardView>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/genresName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/default_genres"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="13sp" />
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

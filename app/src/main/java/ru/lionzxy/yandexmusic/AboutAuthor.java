@@ -1,6 +1,9 @@
 package ru.lionzxy.yandexmusic;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,12 +40,18 @@ public class AboutAuthor extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about_author);
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         ao = intent.hasExtra("authorObject") ? (AuthorObject) intent.getSerializableExtra("authorObject") : AuthorObject.UNKNOWN;
+
+        setContentView(R.layout.activity_about_author);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ao.color));
+            getWindow().setStatusBarColor(ao.color);
+        }
+
 
         //Set content
         try {
@@ -53,6 +63,7 @@ public class AboutAuthor extends AppCompatActivity {
             ((TextView) findViewById(R.id.albumscol)).setText(String.valueOf(ao.albums));
             descr.setText(ao.description);
             findViewById(R.id.additionalInfo).startAnimation(AnimationUtils.loadAnimation(this, R.anim.alphavisible));
+            ((ImageView) findViewById(R.id.cardViewBackground)).setImageDrawable(new GradientDrawable(GradientDrawable.Orientation.TR_BL,new int[]{ao.color, Color.WHITE}));;
         } catch (Exception e) {
             new ContextDialogException(AboutAuthor.this, e);
         }
@@ -81,6 +92,7 @@ public class AboutAuthor extends AppCompatActivity {
             if (ao.link == null || ao.link.length() == 0)
                 fab.hide();
             else {
+                fab.setVisibility(View.VISIBLE);
                 fab.attachToScrollView((ObservableScrollView) findViewById(R.id.scrollViewList));
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
