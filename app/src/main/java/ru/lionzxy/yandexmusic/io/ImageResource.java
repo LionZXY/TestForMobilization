@@ -2,12 +2,14 @@ package ru.lionzxy.yandexmusic.io;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
@@ -17,6 +19,7 @@ import java.io.Serializable;
 
 import ru.lionzxy.yandexmusic.R;
 import ru.lionzxy.yandexmusic.collections.enums.ImageResourceType;
+import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
 
 /**
  * Created by LionZXY on 20.04.2016.
@@ -45,45 +48,49 @@ public class ImageResource implements Serializable {
      * Download and save image with special resolution
      *
      * @param imageView
-     * @param width save width bitmap. Use for low size
-     * @param height save height bitmap. Use for low size
+     * @param width     save width bitmap. Use for low size
+     * @param height    save height bitmap. Use for low size
      */
-    public void setImageOnImageView(final ImageView imageView, final int width, final int height) {
+    public void setImageOnImageView(@NonNull final ImageView imageView, final int width, final int height) {
+        if (imageView == null)
+            return;
+
         DisplayImageOptions options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading).showImageOnFail(R.drawable.notfoundmusic).build();
+        try {
+            switch (imageResourceType) {
+                case LOCAL_STORAGE: {
+                    String path = DATA_PATH + "/" + filename;
+                    imageLoader.displayImage("file://" + path, imageView);
+                    break;
+                }
+                case NETWORK: {
+                    imageLoader.displayImage(imageUrl, imageView, options, new ImageLoadingListener() {
+                        public void onLoadingStarted(String imageUri, View view) {}
+                        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {}
+                        public void onLoadingCancelled(String imageUri, View view) {}
 
-        switch (imageResourceType) {
-            case LOCAL_STORAGE: {
-                String path = DATA_PATH + "/" + filename;
-                imageLoader.displayImage("file://" + path, imageView);
-                break;
+                        @Override
+                        public void onLoadingComplete(final String imageUri, View view, final Bitmap loadedImage) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    saveImage(loadedImage, width, height);
+                                }
+                            }).start();
+                        }
+                    });
+                    break;
+                }
+                case UNKNOWN: {
+                    imageView.setImageResource(R.drawable.notfoundmusic);
+                    break;
+                }
             }
-            case NETWORK: {
-                imageLoader.displayImage(imageUrl, imageView, options, new ImageLoadingListener() {
-                    public void onLoadingStarted(String imageUri, View view) {
-                    }
-
-                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                    }
-
-                    public void onLoadingCancelled(String imageUri, View view) {
-                    }
-
-                    @Override
-                    public void onLoadingComplete(final String imageUri, View view, final Bitmap loadedImage) {
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                saveImage(loadedImage, width, height);
-                            }
-                        }).start();
-                    }
-                });
-                break;
-            }
-            case UNKNOWN: {
-                imageView.setImageResource(R.drawable.notfoundmusic);
-                break;
-            }
+        } catch (IllegalStateException ex) {
+            ImageResource.imageLoader.init(ImageLoaderConfiguration.createDefault(imageView.getContext()));
+            setImageOnImageView(imageView,width,height);
+        } catch (Exception e) {
+            new ContextDialogException(imageView.getContext(), e);
         }
     }
 

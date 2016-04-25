@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
@@ -41,12 +42,14 @@ import ru.lionzxy.yandexmusic.io.ImageResource;
 public class LoadingActivity extends AppCompatActivity {
     private static final String TAG = "YaMobLoading";
     public static final String SHAREDTAG = "YandexMobil";
-    public static List<AuthorObject> authorObjects = new ArrayList<>();
+    public static final String GENRESURL = "https://api.music.yandex.net/genres";
+    public static final String AUTHORURL = "http://download.cdn.yandex.net/mobilization-2016/artists.json";
+    public static List<AuthorObject> authorObjects = null;
     public static HashMap<String, GenresObject> genresHashMap = new HashMap<>();
     public static HashMap<Long, GenresObject> genresHashMapOnDBID = new HashMap<>();
     public static DatabaseHelper databaseHelper = null;
 
-    private HashMap<Integer, AuthorObject> testForNullHashMap = new HashMap<>();
+    public static HashMap<Integer, AuthorObject> testForNullHashMap = new HashMap<>();
     public SQLiteDatabase databaseSql;
     private RoundCornerProgressBar progress;
 
@@ -58,8 +61,6 @@ public class LoadingActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
-
-        ImageResource.imageLoader.init(ImageLoaderConfiguration.createDefault(LoadingActivity.this));
 
         progress = (RoundCornerProgressBar) findViewById(R.id.progressBar);
         progress.setProgressColor(getResources().getColor(R.color.colorPrimary));
@@ -73,6 +74,8 @@ public class LoadingActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                authorObjects = new ArrayList<AuthorObject>();
+
                 databaseSql = databaseHelper.getReadableDatabase();
                 mHandler.obtainMessage(3, getResources().getString(R.string.load1)).sendToTarget();
                 loadGenresFromDatabase(databaseSql);
@@ -83,7 +86,7 @@ public class LoadingActivity extends AppCompatActivity {
                 databaseSql = databaseHelper.getWritableDatabase();
                 try {
                     //Yandex.Music don't support file size
-                    HttpURLConnection urlConnection = (HttpURLConnection) new URL("https://api.music.yandex.net/genres").openConnection();
+                    HttpURLConnection urlConnection = (HttpURLConnection) new URL(GENRESURL).openConnection();
                     urlConnection.connect();
                     downloadGenres(urlConnection);
                 } catch (Exception e) {
@@ -92,7 +95,7 @@ public class LoadingActivity extends AppCompatActivity {
 
                 mHandler.obtainMessage(3, getResources().getString(R.string.load4)).sendToTarget();
                 try {
-                    HttpURLConnection urlConnection = (HttpURLConnection) new URL("http://download.cdn.yandex.net/mobilization-2016/artists.json").openConnection();
+                    HttpURLConnection urlConnection = (HttpURLConnection) new URL(AUTHORURL).openConnection();
                     urlConnection.connect();
                     int file_size = urlConnection.getContentLength();
 
@@ -120,8 +123,8 @@ public class LoadingActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Intent intent = new Intent(getApplication(), MusicList.class);
-                        startActivity(intent);
+                        setResult(RESULT_OK);
+                        finish();
                     }
                 });
             }
@@ -207,7 +210,7 @@ public class LoadingActivity extends AppCompatActivity {
 
             JSONArray arr = new JSONObject(str).getJSONArray("result");
             for (int i = 0; i < arr.length(); i++) {
-                addGenreFromJsonObject(arr.getJSONObject(i));
+                addGenreFromJsonObject(arr.getJSONObject(i), databaseSql);
                 mHandler.obtainMessage(1, (int) ((i * 500) / arr.length())).sendToTarget();
             }
 
@@ -240,7 +243,7 @@ public class LoadingActivity extends AppCompatActivity {
 
             JSONArray arr = new JSONArray(str);
             for (int i = 0; i < arr.length(); i++) {
-                addAuthorFromJsonObject(arr.getJSONObject(i));
+                addAuthorFromJsonObject(arr.getJSONObject(i), databaseSql);
                 mHandler.obtainMessage(1, (int) ((i * 500) / arr.length()) + 500).sendToTarget();
             }
             urlConnection.disconnect();
@@ -249,13 +252,13 @@ public class LoadingActivity extends AppCompatActivity {
         }
     }
 
-    public boolean addAuthorFromJsonObject(JSONObject jsonObject) {
+    public static boolean addAuthorFromJsonObject(JSONObject jsonObject, SQLiteDatabase databaseSql) {
         try {
             if (jsonObject == null)
                 return false;
 
             AuthorObject authorObject = new AuthorObject(jsonObject);
-            if (testForNullHashMap.get(authorObject.authorId) == null) {
+            if (testForNullHashMap != null && testForNullHashMap.get(authorObject.authorId) == null) {
                 testForNullHashMap.put(authorObject.authorId, authorObject);
                 authorObjects.add(authorObject);
                 authorObject.putInDB(databaseSql);
@@ -267,7 +270,7 @@ public class LoadingActivity extends AppCompatActivity {
         }
     }
 
-    public boolean addGenreFromJsonObject(JSONObject jsonObject) {
+    public static boolean addGenreFromJsonObject(JSONObject jsonObject, SQLiteDatabase databaseSql) {
         try {
             if (jsonObject == null)
                 return false;
@@ -275,7 +278,7 @@ public class LoadingActivity extends AppCompatActivity {
             if (jsonObject.has("subGenres")) {
                 JSONArray array = jsonObject.getJSONArray("subGenres");
                 for (int i = 0; i < array.length(); i++)
-                    addGenreFromJsonObject(array.getJSONObject(i));
+                    addGenreFromJsonObject(array.getJSONObject(i), databaseSql);
             }
 
             GenresObject genresObject = new GenresObject(jsonObject);
@@ -288,6 +291,11 @@ public class LoadingActivity extends AppCompatActivity {
             Log.e(TAG, "Error on parse genre from json object", e);
             return false;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return keyCode != KeyEvent.KEYCODE_BACK && super.onKeyDown(keyCode, event);
     }
 
 }

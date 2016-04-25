@@ -3,6 +3,7 @@ package ru.lionzxy.yandexmusic;
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ViewAsserts;
+import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
  * Created by LionZXY on 19.04.2016.
  * YandexMusic
  */
+@SmallTest
 public class LoadingSimplyTest extends ActivityInstrumentationTestCase2 {
 
     Activity activity;

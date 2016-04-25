@@ -40,7 +40,6 @@ public class AboutAuthor extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Intent intent = getIntent();
         ao = intent.hasExtra("authorObject") ? (AuthorObject) intent.getSerializableExtra("authorObject") : AuthorObject.UNKNOWN;
 
@@ -63,7 +62,6 @@ public class AboutAuthor extends AppCompatActivity {
             ((TextView) findViewById(R.id.albumscol)).setText(String.valueOf(ao.albums));
             descr.setText(ao.description);
             findViewById(R.id.additionalInfo).startAnimation(AnimationUtils.loadAnimation(this, R.anim.alphavisible));
-            ((ImageView) findViewById(R.id.cardViewBackground)).setImageDrawable(new GradientDrawable(GradientDrawable.Orientation.TR_BL,new int[]{ao.color, Color.WHITE}));;
         } catch (Exception e) {
             new ContextDialogException(AboutAuthor.this, e);
         }
@@ -129,5 +127,19 @@ public class AboutAuthor extends AppCompatActivity {
             intent.setDataAndType(Uri.fromFile(file), "image/*");
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        ao = (AuthorObject) savedInstanceState.getSerializable("authorObject");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("authorObject", ao);
+
+        super.onSaveInstanceState(outState);
     }
 }
