@@ -106,12 +106,16 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
 
         if (jsonObject.has("genres")) {
             int brokenVal = 0;
+            List<Integer> genres = new ArrayList<>();
             JSONArray arr = jsonObject.getJSONArray("genres");
             for (int i = 0; i < arr.length(); i++) {
                 GenresObject genresObject = LoadingActivity.genresHashMap.get(arr.getString(i));
-                if (genresObject != null)
+                if (genresObject != null){
                     genresObjects.add(genresObject);
+                    genres.add(genresObject.color);
+                }
             }
+            color = ColorHelper.mixColors(genres);
         }
 
         tracks = jsonObject.has("tracks") ? jsonObject.getInt("tracks") : UNKNOWN.tracks;
@@ -140,7 +144,7 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
         values.put(DatabaseHelper.AUTHOR_COLUMN.DESCRIPTION_COLUMN, description);
         values.put(DatabaseHelper.AUTHOR_COLUMN.NAME_COLUNM, name);
         values.put(DatabaseHelper.AUTHOR_COLUMN.LINK_COLUMN, link);
-        if (genresObjects.size() > 0) {
+        if (genresObjects.size() > 0){
             StringBuilder sb = new StringBuilder();
             sb.append(genresObjects.get(0).idInDB);
             for (int i = 1; i < genresObjects.size(); i++)

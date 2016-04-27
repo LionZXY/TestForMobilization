@@ -47,8 +47,10 @@ public class AboutAuthor extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ao.color));
-            getWindow().setStatusBarColor(ao.color);
+            if (ao.color != Color.WHITE) {
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ao.color));
+                getWindow().setStatusBarColor(ao.color);
+            }
         }
 
 
