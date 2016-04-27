@@ -1,8 +1,10 @@
 package ru.lionzxy.yandexmusic.io;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -51,26 +53,31 @@ public class ImageResource implements Serializable {
      * @param width     save width bitmap. Use for low size
      * @param height    save height bitmap. Use for low size
      */
-    public void setImageOnImageView(@NonNull final ImageView imageView, final int width, final int height) {
+    public void setImageOnImageView(@NonNull final ImageView imageView, final int width, final int height, @Nullable final ImageLoadingListener listener) {
         if (imageView == null)
             return;
 
-        DisplayImageOptions options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading).showImageOnFail(R.drawable.notfoundmusic).build();
+        DisplayImageOptions options = new DisplayImageOptions.Builder().showImageOnFail(R.drawable.notfoundmusic).build();
+
         try {
             switch (imageResourceType) {
                 case LOCAL_STORAGE: {
                     String path = DATA_PATH + "/" + filename;
-                    imageLoader.displayImage("file://" + path, imageView);
+                    if (listener == null)
+                        imageLoader.displayImage("file://" + path, imageView);
+                    else imageLoader.displayImage("file://" + path, imageView, listener);
                     break;
                 }
                 case NETWORK: {
                     imageLoader.displayImage(imageUrl, imageView, options, new ImageLoadingListener() {
-                        public void onLoadingStarted(String imageUri, View view) {}
-                        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {}
-                        public void onLoadingCancelled(String imageUri, View view) {}
+                        public void onLoadingStarted(String imageUri, View view) {if (listener != null) listener.onLoadingStarted(imageUri, view);}
+                        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {if (listener != null) listener.onLoadingFailed(imageUri, view, failReason);}
+                        public void onLoadingCancelled(String imageUri, View view) {if (listener != null) listener.onLoadingCancelled(imageUri, view);}
 
                         @Override
                         public void onLoadingComplete(final String imageUri, View view, final Bitmap loadedImage) {
+                            if (listener != null) listener.onLoadingComplete(imageUri, view, loadedImage);
+
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -88,21 +95,32 @@ public class ImageResource implements Serializable {
             }
         } catch (IllegalStateException ex) {
             ImageResource.imageLoader.init(ImageLoaderConfiguration.createDefault(imageView.getContext()));
-            setImageOnImageView(imageView,width,height);
+            setImageOnImageView(imageView, width, height, listener);
         } catch (Exception e) {
             new ContextDialogException(imageView.getContext(), e);
         }
     }
 
     public void setImageOnImageView(final ImageView imageView) {
-        setImageOnImageView(imageView, 0, 0);
+        setImageOnImageView(imageView, 0, 0, null);
+    }
+
+    public void setImageOnImageView(final ImageView imageView, ImageLoadingListener listener) {
+        setImageOnImageView(imageView, 0, 0, listener);
     }
 
     public void setImageOnImageView(final ImageView imageView, boolean fit) {
         if (fit)
-            setImageOnImageView(imageView, imageView.getWidth(), imageView.getHeight());
+            setImageOnImageView(imageView, imageView.getWidth(), imageView.getHeight(), null);
         else setImageOnImageView(imageView);
     }
+
+    public void setImageOnImageView(final ImageView imageView, ImageLoadingListener listener, boolean fit) {
+        if (fit)
+            setImageOnImageView(imageView, imageView.getWidth(), imageView.getHeight(), listener);
+        else setImageOnImageView(imageView);
+    }
+
 
     private void saveImage(Bitmap bitmap, int width, int height) {
         try {

@@ -71,7 +71,7 @@
                                             android:layout_height="wrap_content"
                                             card_view:cardBackgroundColor="#BFBFBF">
 
-                                            <ru.lionzxy.yandexmusic.views.AnimatedImageView
+                                            <ru.lionzxy.yandexmusic.views.OneTimeAnimatedImageView
                                                 android:id="@+id/imageView"
                                                 android:layout_width="180dp"
                                                 android:layout_height="180dp"

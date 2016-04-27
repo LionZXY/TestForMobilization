@@ -5,12 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +32,7 @@ import java.util.List;
 import ru.lionzxy.yandexmusic.AboutAuthor;
 import ru.lionzxy.yandexmusic.LoadingActivity;
 import ru.lionzxy.yandexmusic.R;
+import ru.lionzxy.yandexmusic.collections.enums.ImageResourceType;
 import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
 import ru.lionzxy.yandexmusic.exceptions.ErrorJsonFileException;
 import ru.lionzxy.yandexmusic.helper.ColorHelper;
@@ -32,6 +41,7 @@ import ru.lionzxy.yandexmusic.helper.PixelHelper;
 import ru.lionzxy.yandexmusic.helper.TextHelper;
 import ru.lionzxy.yandexmusic.interfaces.IListElement;
 import ru.lionzxy.yandexmusic.io.ImageResource;
+import ru.lionzxy.yandexmusic.views.AnimatedImageView;
 
 /**
  * Created by LionZXY on 09.04.16.
@@ -148,8 +158,21 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
     @Override
     public void setImage(ImageView imageView, boolean isBig) {
         ImageResource imageResource = (isBig ? (bigImage == null ? smallImage : bigImage) : (smallImage == null ? bigImage : smallImage));
-        if (imageResource != null)
-            imageResource.setImageOnImageView(imageView, true);
+        if (imageResource != null) {
+            if (isBig) {
+                imageResource.setImageOnImageView(imageView, (imageResource.imageResourceType == ImageResourceType.NETWORK && smallImage != null && smallImage.imageResourceType == ImageResourceType.LOCAL_STORAGE) ? new ImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+                        ((ImageView) view).setImageBitmap(BitmapFactory.decodeFile(smallImage.getImageFile().getPath()));
+                    }
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                        ((ImageView) view).setImageBitmap(BitmapFactory.decodeFile(smallImage.getImageFile().getPath()));
+                    }
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {}
+                    public void onLoadingCancelled(String imageUri, View view) {}
+                }:null);
+            } else imageResource.setImageOnImageView(imageView, true);
+        } else imageView.setImageResource(R.drawable.notfoundmusic);
 
     }
 

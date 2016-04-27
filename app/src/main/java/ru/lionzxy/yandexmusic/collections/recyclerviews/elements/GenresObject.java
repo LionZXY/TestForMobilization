@@ -94,6 +94,7 @@ public class GenresObject implements Serializable, IListElement {
         ImageResource imageResource = (isBig ? (bigImage == null ? smallImage : bigImage) : (smallImage == null ? bigImage : smallImage));
         if (imageResource != null)
             imageResource.setImageOnImageView(imageView, true);
+        else imageView.setImageResource(R.drawable.notfoundmusic);
     }
 
     @Override
