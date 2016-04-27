@@ -1,9 +1,7 @@
 package ru.lionzxy.yandexmusic;
 
 import android.graphics.Color;
-import android.test.mock.MockResources;
 import android.test.suitebuilder.annotation.SmallTest;
-import android.util.TypedValue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

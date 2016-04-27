@@ -1,5 +1,6 @@
 package ru.lionzxy.yandexmusic.collections.recyclerviews;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,17 +13,19 @@ import ru.lionzxy.yandexmusic.interfaces.IListElement;
  * YandexMusic
  */
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
-    View view = null;
-    ImageView imageView = null;
+    private View view = null;
+    private ImageView imageView = null;
+    private Activity activity;
 
-    public RecyclerViewHolder(View itemView) {
+    public RecyclerViewHolder(Activity activity, View itemView) {
         super(itemView);
         this.view = itemView;
+        this.activity = activity;
         if (view != null)
             imageView = (ImageView) view.findViewById(R.id.imageView);
     }
 
-    public RecyclerViewHolder setItem(IListElement listElement) {
+    public RecyclerViewHolder setItem(final IListElement listElement) {
         if (view == null)
             return this;
 
@@ -31,7 +34,12 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
             listElement.setImage(imageView, false);
         }
 
-        view.findViewById(R.id.card_view).setOnClickListener(listElement);
+        view.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listElement.onClick(v, activity);
+            }
+        });
         listElement.setItem(view);
         return this;
     }

@@ -29,7 +29,7 @@
                 android:scaleType="centerCrop"
                 android:layout_gravity="center"
                 android:id="@+id/imageView"
-                android:contentDescription="@string/logo" />
+                android:contentDescription="@string/load_logo" />
 
             <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
                 android:id="@+id/progressBar"

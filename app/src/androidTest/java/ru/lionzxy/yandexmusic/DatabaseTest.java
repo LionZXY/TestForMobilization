@@ -5,19 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.RenamingDelegatingContext;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.test.suitebuilder.annotation.MediumTest;
 
 import org.json.JSONObject;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.AuthorObject;
 import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.GenresObject;

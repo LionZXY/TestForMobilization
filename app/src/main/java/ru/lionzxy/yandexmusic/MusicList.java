@@ -51,7 +51,7 @@ public class MusicList extends AppCompatActivity {
             mRecyclerView = (LockableRecyclerView) findViewById(R.id.recyclerview);
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            mRecyclerView.setAdapter(new RecyclerViewAdapter(new ArrayList<IListElement>(LoadingActivity.authorObjects), R.layout.authorcard));
+            mRecyclerView.setAdapter(new RecyclerViewAdapter(MusicList.this, new ArrayList<IListElement>(LoadingActivity.authorObjects), R.layout.authorcard));
 
             checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.INTERNET");
 

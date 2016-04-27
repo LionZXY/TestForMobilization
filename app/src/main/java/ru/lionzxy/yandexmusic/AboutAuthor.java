@@ -3,7 +3,6 @@ package ru.lionzxy.yandexmusic;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +25,6 @@ import ru.lionzxy.yandexmusic.collections.recyclerviews.RecyclerViewAdapter;
 import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.AuthorObject;
 import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.GenresObject;
 import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
-import ru.lionzxy.yandexmusic.views.AnimatedImageView;
 
 /**
  * Created by LionZXY on 09.04.16.
@@ -56,7 +54,7 @@ public class AboutAuthor extends AppCompatActivity {
 
         //Set content
         try {
-            final AnimatedImageView image = (AnimatedImageView) findViewById(R.id.imageView);
+            final ImageView image = (ImageView) findViewById(R.id.imageView);
             ao.setImage(image, true);
             TextView descr = (TextView) findViewById(R.id.description);
             ((TextView) findViewById(R.id.head_author)).setText(ao.name);
@@ -77,7 +75,7 @@ public class AboutAuthor extends AppCompatActivity {
                 mRecyclerView = (RecyclerView) list.findViewById(R.id.genresList);
                 mRecyclerView.setHasFixedSize(true);
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-                RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(R.layout.genrecard);
+                RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(AboutAuthor.this, R.layout.genrecard);
                 mRecyclerView.setAdapter(recyclerViewAdapter);
 
                 for (GenresObject genresObject : ao.genresObjects)
@@ -122,7 +120,7 @@ public class AboutAuthor extends AppCompatActivity {
     public void openFullImage(View view) {
         File file = ao.getFile(true);
         if (file == null || !file.exists()) {
-            Toast.makeText(this, getResources().getString(R.string.wait), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_wait), Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);

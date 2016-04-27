@@ -1,9 +1,9 @@
 <resources>
     <!--Заголовки активити-->
     <string name="app_name">Yandex.Mobilization</string>
-    <string name="loading">Загрузка</string>
-    <string name="list">Список авторов</string>
-    <string name="about">О Авторе</string>
+    <string name="app_loading">Загрузка</string>
+    <string name="app_list">Список авторов</string>
+    <string name="app_about">О Авторе</string>
 
     <!--Стандартные параметры-->
     <string name="default_genres">Неизвестный жанр</string>
@@ -13,21 +13,20 @@
     <string name="default_albums">22</string>
 
     <!--Описания изображений-->
-    <string name="genres">Визуализация жанра</string>
-    <string name="logo">Лого приложения</string>
-    <string name="notfoundimage">Не найдено изображение для загрузки</string>
+    <string name="genre_genres">Визуализация жанра</string>
+    <string name="load_logo">Лого приложения</string>
 
     <!--Тосты-->
-    <string name="wait">Пожалуйста подождите. Файл загружается</string>
+    <string name="toast_wait">Пожалуйста подождите. Файл загружается</string>
 
     <!--Состояния загрузки-->
-    <string name="load1">Загрузка жанров из базы данных</string>
-    <string name="load2">Загрузка авторов из базы данных</string>
-    <string name="load3">Загрузка жанров с сервера</string>
-    <string name="load4">Загрузка авторов с сервера</string>
+    <string name="load_load1">Загрузка жанров из базы данных</string>
+    <string name="load_load2">Загрузка авторов из базы данных</string>
+    <string name="load_load3">Загрузка жанров с сервера</string>
+    <string name="load_load4">Загрузка авторов с сервера</string>
 
-    <string name="tracks">Треков:</string>
-    <string name="albums">Альбомов:</string>
+    <string name="author_tracks">Треков:</string>
+    <string name="author_albums">Альбомов:</string>
 
     <!--Диалоговое окно ошибки-->
     <string name="error_add_default">Просьба уведомить об этом вопиющем недоразумении авторам программы. А пока можете решить как наказывать за этот поступок наших программистов.</string>
@@ -37,4 +36,10 @@
     <string name="error_default">В программе произошла ошибка! </string>
     <string name="error_image_load">Произошла ошибка про загрузке изображения. </string>
     <string name="error_data_load">Произошла ошибка чтения данных. </string>
+
+    <!--Описания элементов для межоконной анимации-->
+    <string name="author_name">Author name</string>
+    <string name="author_avatar">Author avatar</string>
+    <string name="author_description">Author description</string>
+    <string name="author_card">Author card</string>
 </resources>

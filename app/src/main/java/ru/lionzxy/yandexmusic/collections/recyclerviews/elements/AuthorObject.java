@@ -1,22 +1,21 @@
 package ru.lionzxy.yandexmusic.collections.recyclerviews.elements;
 
+import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
@@ -41,14 +40,13 @@ import ru.lionzxy.yandexmusic.helper.PixelHelper;
 import ru.lionzxy.yandexmusic.helper.TextHelper;
 import ru.lionzxy.yandexmusic.interfaces.IListElement;
 import ru.lionzxy.yandexmusic.io.ImageResource;
-import ru.lionzxy.yandexmusic.views.AnimatedImageView;
 
 /**
  * Created by LionZXY on 09.04.16.
  * YandexMusic
  */
 
-public class AuthorObject implements Serializable, IListElement, View.OnClickListener {
+public class AuthorObject implements Serializable, IListElement {
     public static final AuthorObject UNKNOWN = new AuthorObject();
     public List<GenresObject> genresObjects = new ArrayList<>();
     public String name, description, link;
@@ -110,7 +108,7 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
             JSONArray arr = jsonObject.getJSONArray("genres");
             for (int i = 0; i < arr.length(); i++) {
                 GenresObject genresObject = LoadingActivity.genresHashMap.get(arr.getString(i));
-                if (genresObject != null){
+                if (genresObject != null) {
                     genresObjects.add(genresObject);
                     genres.add(genresObject.color);
                 }
@@ -144,7 +142,7 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
         values.put(DatabaseHelper.AUTHOR_COLUMN.DESCRIPTION_COLUMN, description);
         values.put(DatabaseHelper.AUTHOR_COLUMN.NAME_COLUNM, name);
         values.put(DatabaseHelper.AUTHOR_COLUMN.LINK_COLUMN, link);
-        if (genresObjects.size() > 0){
+        if (genresObjects.size() > 0) {
             StringBuilder sb = new StringBuilder();
             sb.append(genresObjects.get(0).idInDB);
             for (int i = 1; i < genresObjects.size(); i++)
@@ -169,12 +167,17 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
                     public void onLoadingStarted(String imageUri, View view) {
                         ((ImageView) view).setImageBitmap(BitmapFactory.decodeFile(smallImage.getImageFile().getPath()));
                     }
+
                     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                         ((ImageView) view).setImageBitmap(BitmapFactory.decodeFile(smallImage.getImageFile().getPath()));
                     }
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {}
-                    public void onLoadingCancelled(String imageUri, View view) {}
-                }:null);
+
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    }
+
+                    public void onLoadingCancelled(String imageUri, View view) {
+                    }
+                } : null);
             } else imageResource.setImageOnImageView(imageView, true);
         } else imageView.setImageResource(R.drawable.notfoundmusic);
 
@@ -203,20 +206,28 @@ public class AuthorObject implements Serializable, IListElement, View.OnClickLis
         ((ImageView) view.findViewById(R.id.cardViewBackground)).setAlpha(0.6F);
     }
 
-
     @Override
-    public void onClick(View view) {
+    public void onClick(View view, Activity activity) {
         if (view == null)
             return;
 
-        Context context = view.getContext();
-
         try {
-            Intent intent = new Intent(context, AboutAuthor.class);
+            View imageView = view.findViewById(R.id.imageView);
+            View name = view.findViewById(R.id.head_author);
+            View description = view.findViewById(R.id.description);
+
+
+            Pair<View, String> pair2 = Pair.create(imageView, imageView.getTransitionName());
+            Pair<View, String> pair3 = Pair.create(name, name.getTransitionName());
+            Pair<View, String> pair4 = Pair.create(description, description.getTransitionName());
+
+            Intent intent = new Intent(activity, AboutAuthor.class);
             intent.putExtra("authorObject", this);
-            context.startActivity(intent);
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(activity, pair2, pair3, pair4);
+            activity.startActivity(intent, options.toBundle());
         } catch (Exception e) {
-            new ContextDialogException(context, e);
+            new ContextDialogException(activity, e);
         }
     }
 }

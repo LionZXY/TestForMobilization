@@ -1,5 +1,6 @@
 package ru.lionzxy.yandexmusic.collections.recyclerviews.elements;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -107,7 +108,7 @@ public class GenresObject implements Serializable, IListElement {
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view, Activity activity) {
 
     }
 }

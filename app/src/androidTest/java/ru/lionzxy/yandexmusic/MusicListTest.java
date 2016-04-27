@@ -1,15 +1,9 @@
 package ru.lionzxy.yandexmusic;
 
-import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ViewAsserts;
 import android.test.suitebuilder.annotation.SmallTest;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
 /**
  * Created by LionZXY on 25.04.2016.

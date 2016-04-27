@@ -1,7 +1,6 @@
 package ru.lionzxy.yandexmusic;
 
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ViewAsserts;
 

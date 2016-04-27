@@ -17,9 +17,9 @@
         </activity>
 
         <activity android:name=".AboutAuthor"
-            android:label="@string/about"/>
+            android:label="@string/app_about"/>
         <activity android:name=".LoadingActivity"
-            android:label="@string/loading"/>
+            android:label="@string/app_loading"/>
 
     </application>
 

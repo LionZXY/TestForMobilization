@@ -1,26 +1,8 @@
 package ru.lionzxy.yandexmusic;
 
 import android.app.Activity;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.RenamingDelegatingContext;
-import android.test.ViewAsserts;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.GenresObject;
-import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
 import ru.lionzxy.yandexmusic.helper.PixelHelper;
 
 /**

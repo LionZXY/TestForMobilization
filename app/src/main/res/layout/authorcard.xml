@@ -24,7 +24,8 @@
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:paddingTop="4dp"
-                card_view:cardCornerRadius="4dp">
+                card_view:cardCornerRadius="4dp"
+                android:transitionName="@string/author_card">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -43,9 +44,10 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:background="#00ffffff"
-                        android:contentDescription="@string/notfoundimage"
+                        android:contentDescription="@string/author_avatar"
                         android:padding="8dp"
-                        android:scaleType="centerCrop" />
+                        android:scaleType="centerCrop"
+                        android:transitionName="@string/author_avatar"/>
 
                     <TextView
                         android:id="@+id/head_author"
@@ -62,7 +64,8 @@
                         android:text="@string/default_author"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="#000000"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:transitionName="@string/author_name"/>
 
                     <TextView
                         android:id="@+id/description"
@@ -79,7 +82,8 @@
                         android:paddingRight="5dp"
                         android:text="@string/default_author_description"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        android:transitionName="@string/author_description"/>
 
                 </RelativeLayout>
             </android.support.v7.widget.CardView>

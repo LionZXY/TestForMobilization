@@ -1,6 +1,5 @@
 package ru.lionzxy.yandexmusic;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,7 +15,6 @@ import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,7 +31,6 @@ import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.AuthorObject;
 import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.GenresObject;
 import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
 import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
-import ru.lionzxy.yandexmusic.io.ImageResource;
 
 /**
  * Created by LionZXY on 16.04.2016.
@@ -77,12 +74,12 @@ public class LoadingActivity extends AppCompatActivity {
                 authorObjects = new ArrayList<AuthorObject>();
 
                 databaseSql = databaseHelper.getReadableDatabase();
-                mHandler.obtainMessage(3, getResources().getString(R.string.load1)).sendToTarget();
+                mHandler.obtainMessage(3, getResources().getString(R.string.load_load1)).sendToTarget();
                 loadGenresFromDatabase(databaseSql);
-                mHandler.obtainMessage(3, getResources().getString(R.string.load2)).sendToTarget();
+                mHandler.obtainMessage(3, getResources().getString(R.string.load_load2)).sendToTarget();
                 loadAuthorsFromDatabase(databaseSql);
 
-                mHandler.obtainMessage(3, getResources().getString(R.string.load3)).sendToTarget();
+                mHandler.obtainMessage(3, getResources().getString(R.string.load_load3)).sendToTarget();
                 databaseSql = databaseHelper.getWritableDatabase();
                 try {
                     //Yandex.Music don't support file size
@@ -93,7 +90,7 @@ public class LoadingActivity extends AppCompatActivity {
                     Log.e("Genres", "Error while connect to internet", e);
                 }
 
-                mHandler.obtainMessage(3, getResources().getString(R.string.load4)).sendToTarget();
+                mHandler.obtainMessage(3, getResources().getString(R.string.load_load4)).sendToTarget();
                 try {
                     HttpURLConnection urlConnection = (HttpURLConnection) new URL(AUTHORURL).openConnection();
                     urlConnection.connect();
