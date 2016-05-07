@@ -37,18 +37,19 @@ import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
  * YandexMusic
  */
 public class LoadingActivity extends AppCompatActivity {
-    private static final String TAG = "YaMobLoading";
-    public static final String SHAREDTAG = "YandexMobil";
-    public static final String GENRESURL = "https://api.music.yandex.net/genres";
-    public static final String AUTHORURL = "http://download.cdn.yandex.net/mobilization-2016/artists.json";
-    public static List<AuthorObject> authorObjects = null;
-    public static HashMap<String, GenresObject> genresHashMap = new HashMap<>();
-    public static HashMap<Long, GenresObject> genresHashMapOnDBID = new HashMap<>();
-    public static DatabaseHelper databaseHelper = null;
+    private static final String         TAG = "YaMobLoading";
+    public static final String          SHAREDTAG = "YandexMobil";
+    public static final String          GENRESURL = "https://api.music.yandex.net/genres";
+    public static final String          AUTHORURL = "http://download.cdn.yandex.net/mobilization-2016/artists.json";
 
-    public static HashMap<Integer, AuthorObject> testForNullHashMap = new HashMap<>();
-    public SQLiteDatabase databaseSql;
-    private RoundCornerProgressBar progress;
+    public static List<AuthorObject>            authorObjects = null;
+    public static HashMap<String, GenresObject> genresHashMap = new HashMap<>();
+    public static HashMap<Long, GenresObject>   genresHashMapOnDBID = new HashMap<>();
+    public static DatabaseHelper                databaseHelper = null;
+
+    public static HashMap<Integer, AuthorObject>    testForNullHashMap = new HashMap<>();
+    public SQLiteDatabase                           databaseSql;
+    private RoundCornerProgressBar                  progress;
 
     static {
         genresHashMap.put("unkn", GenresObject.UNKNOWN);

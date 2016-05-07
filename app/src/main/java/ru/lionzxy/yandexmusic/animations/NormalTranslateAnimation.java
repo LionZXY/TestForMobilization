@@ -20,8 +20,8 @@ public class NormalTranslateAnimation extends Animation {
         this.view = view;
         startY = view.getY();
         startX = view.getX();
-        this.targetY = targetY;
-        this.targetX = targetX;
+        this.targetY = targetY == -1 ? view.getY() : targetY;
+        this.targetX = targetX == -1 ? view.getX() : targetX;
     }
 
     @Override

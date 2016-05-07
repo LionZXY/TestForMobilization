@@ -19,8 +19,8 @@ public class ResizeAnimation extends Animation {
         this.view = view;
         startWidth = view.getWidth();
         startHight = view.getHeight();
-        this.targetHight = targetHight;
-        this.targetWidth = targetWidth;
+        this.targetHight = targetHight == -1 ? view.getHeight() : targetHight;
+        this.targetWidth = targetWidth == -1 ? view.getWidth() : targetWidth;
     }
 
     @Override

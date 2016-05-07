@@ -5,6 +5,16 @@
     <string name="app_list">Список авторов</string>
     <string name="app_about">О Авторе</string>
 
+    <!--Пункты бокового меню-->
+    <string name="drawer_sorting_title">Сортировка</string>
+    <string name="drawer_sorting_by_name">По имени</string>
+    <string name="drawer_sorting_by_albums">По альбомам</string>
+    <string name="drawer_sorting_by_tracks">По трекам</string>
+    <string name="drawer_sorting_by_random">Как получиться</string>
+    <string name="drawer_sorting_only_website">Только с сайтом</string>
+    <string name="drawer_sorting_only_big_picture">Только с большим изображением</string>
+    <string name="drawer_sorting_custom_genres">Только с определенными жанрами</string>
+
     <!--Стандартные параметры-->
     <string name="default_genres">Неизвестный жанр</string>
     <string name="default_author">Неизвестный автор</string>

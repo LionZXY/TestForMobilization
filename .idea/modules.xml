@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/YandexMusic.iml" filepath="$PROJECT_DIR$/YandexMusic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TestForMobilization.iml" filepath="$PROJECT_DIR$/TestForMobilization.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

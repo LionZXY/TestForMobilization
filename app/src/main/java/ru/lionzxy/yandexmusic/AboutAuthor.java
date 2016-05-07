@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -40,7 +41,6 @@ public class AboutAuthor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         ao = intent.hasExtra("authorObject") ? (AuthorObject) intent.getSerializableExtra("authorObject") : AuthorObject.UNKNOWN;
-
         setContentView(R.layout.activity_about_author);
 
         if (getSupportActionBar() != null) {
