@@ -1,6 +1,7 @@
 package ru.lionzxy.yandexmusic.collections.recyclerviews;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,18 +16,18 @@ import ru.lionzxy.yandexmusic.interfaces.IListElement;
  * Created by LionZXY on 19.04.2016.
  * YandexMusic
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
-    private List<IListElement> mData = new ArrayList<>();
+public class RecyclerViewAdapter<T extends IListElement> extends RecyclerView.Adapter<RecyclerViewHolder> {
+    private List<T> mData = new ArrayList<>();
     private int layoutId;
     private Activity activity;
 
-    public RecyclerViewAdapter(Activity activity, int layoutId) {
+    public RecyclerViewAdapter(@Nullable Activity activity, int layoutId) {
         super();
         this.layoutId = layoutId;
         this.activity = activity;
     }
 
-    public RecyclerViewAdapter(Activity activity, List<IListElement> mData, int layoutId) {
+    public RecyclerViewAdapter(@Nullable Activity activity, List<T> mData, int layoutId) {
         this(activity, layoutId);
         this.mData = mData;
     }
@@ -48,13 +49,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         return mData.size();
     }
 
-    public void addItem(int position, IListElement data) {
+    public void addItem(int position, T data) {
         mData.add(position, data);
         notifyItemInserted(position);
     }
 
-    public void addItem(IListElement data) {
-
+    public void addItem(T data) {
         addItem(getItemCount(), data);
     }
 

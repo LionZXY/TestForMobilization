@@ -1,4 +1,4 @@
-package ru.lionzxy.yandexmusic.collections.recyclerviews.elements;
+package ru.lionzxy.yandexmusic.model;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -156,8 +157,6 @@ public class AuthorObject implements Serializable, IListElement {
         return this;
     }
 
-
-    @Override
     public void setImage(ImageView imageView, boolean isBig) {
         ImageResource imageResource = (isBig ? (bigImage == null ? smallImage : bigImage) : (smallImage == null ? bigImage : smallImage));
         if (imageResource != null) {
@@ -188,8 +187,8 @@ public class AuthorObject implements Serializable, IListElement {
     }
 
     @Override
-    public void setItem(View view) {
-        ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+    public void setItem(ImageView imageView, View view, final Activity activity) {
+        setImage(imageView, false);
 
         //Clear
         imageView.clearAnimation();
@@ -204,9 +203,16 @@ public class AuthorObject implements Serializable, IListElement {
         gradientDrawable.setGradientRadius(PixelHelper.pixelFromDP(view.getResources(), 100));
         ((ImageView) view.findViewById(R.id.cardViewBackground)).setImageDrawable(gradientDrawable);
         ((ImageView) view.findViewById(R.id.cardViewBackground)).setAlpha(0.6F);
+        CardView cardView = (CardView) view.findViewById(R.id.card_view);
+        if (cardView != null)
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AuthorObject.this.onClick(v, activity);
+                }
+            });
     }
 
-    @Override
     public void onClick(View view, Activity activity) {
         if (view == null)
             return;
@@ -215,7 +221,6 @@ public class AuthorObject implements Serializable, IListElement {
             View imageView = view.findViewById(R.id.imageView);
             View name = view.findViewById(R.id.head_author);
             View description = view.findViewById(R.id.description);
-
 
             Pair<View, String> pair2 = Pair.create(imageView, imageView.getTransitionName());
             Pair<View, String> pair3 = Pair.create(name, name.getTransitionName());

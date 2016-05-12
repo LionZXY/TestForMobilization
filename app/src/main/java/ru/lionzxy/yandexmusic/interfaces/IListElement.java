@@ -1,6 +1,7 @@
 package ru.lionzxy.yandexmusic.interfaces;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -10,9 +11,5 @@ import android.widget.ImageView;
  */
 public interface IListElement{
 
-    void setImage(ImageView imageView, boolean isBig);
-
-    void setItem(View view);
-
-    void onClick(View view, Activity activity);
+    void setItem(ImageView imageView,View view, Activity activity);
 }

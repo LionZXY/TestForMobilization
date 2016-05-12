@@ -27,10 +27,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.AuthorObject;
-import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.GenresObject;
 import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
 import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
+import ru.lionzxy.yandexmusic.model.AuthorObject;
+import ru.lionzxy.yandexmusic.model.GenresObject;
 
 /**
  * Created by LionZXY on 16.04.2016.
@@ -43,6 +43,8 @@ public class LoadingActivity extends AppCompatActivity {
     public static final String          AUTHORURL = "http://download.cdn.yandex.net/mobilization-2016/artists.json";
 
     public static List<AuthorObject>            authorObjects = null;
+
+    public static List<GenresObject>            genresObjects = new ArrayList<>();
     public static HashMap<String, GenresObject> genresHashMap = new HashMap<>();
     public static HashMap<Long, GenresObject>   genresHashMapOnDBID = new HashMap<>();
     public static DatabaseHelper                databaseHelper = null;
@@ -160,6 +162,7 @@ public class LoadingActivity extends AppCompatActivity {
         while (cursor.moveToNext()) {
             try {
                 GenresObject genresObject = new GenresObject(cursor);
+                genresObjects.add(genresObject);
                 genresHashMap.put(genresObject.code, genresObject);
                 genresHashMapOnDBID.put(genresObject.idInDB, genresObject);
             } catch (Exception e) {

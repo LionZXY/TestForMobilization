@@ -31,8 +31,8 @@ android {
     }
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'view-inspector'
+//apply plugin: 'com.android.application'
+//apply plugin: 'view-inspector'
 
 repositories {
     maven { url "https://jitpack.io" }
@@ -59,4 +59,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.+'
     compile 'com.android.support:appcompat-v7:23.2.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }

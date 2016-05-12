@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -23,9 +22,9 @@ import com.melnykov.fab.ObservableScrollView;
 import java.io.File;
 
 import ru.lionzxy.yandexmusic.collections.recyclerviews.RecyclerViewAdapter;
-import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.AuthorObject;
-import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.GenresObject;
 import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
+import ru.lionzxy.yandexmusic.model.AuthorObject;
+import ru.lionzxy.yandexmusic.model.GenresObject;
 
 /**
  * Created by LionZXY on 09.04.16.
@@ -75,7 +74,7 @@ public class AboutAuthor extends AppCompatActivity {
                 mRecyclerView = (RecyclerView) list.findViewById(R.id.genresList);
                 mRecyclerView.setHasFixedSize(true);
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-                RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(AboutAuthor.this, R.layout.genrecard);
+                RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(AboutAuthor.this, R.layout.listelement_genrecard);
                 mRecyclerView.setAdapter(recyclerViewAdapter);
 
                 for (GenresObject genresObject : ao.genresObjects)

@@ -1,6 +1,8 @@
 package ru.lionzxy.yandexmusic.collections.recyclerviews;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,7 +19,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     private ImageView imageView = null;
     private Activity activity;
 
-    public RecyclerViewHolder(Activity activity, View itemView) {
+    public RecyclerViewHolder(@Nullable Activity activity, View itemView) {
         super(itemView);
         this.view = itemView;
         this.activity = activity;
@@ -29,18 +31,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         if (view == null)
             return this;
 
-        if (imageView != null) {
-            imageView.setImageDrawable(null);
-            listElement.setImage(imageView, false);
-        }
-
-        view.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listElement.onClick(v, activity);
-            }
-        });
-        listElement.setItem(view);
+        listElement.setItem(imageView, view, activity);
         return this;
     }
 }

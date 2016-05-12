@@ -1,4 +1,4 @@
-package ru.lionzxy.yandexmusic.collections.recyclerviews.elements;
+package ru.lionzxy.yandexmusic.model;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -90,7 +91,6 @@ public class GenresObject implements Serializable, IListElement {
         return this;
     }
 
-    @Override
     public void setImage(ImageView imageView, boolean isBig) {
         ImageResource imageResource = (isBig ? (bigImage == null ? smallImage : bigImage) : (smallImage == null ? bigImage : smallImage));
         if (imageResource != null)
@@ -99,16 +99,23 @@ public class GenresObject implements Serializable, IListElement {
     }
 
     @Override
-    public void setItem(View view) {
+    public void setItem(ImageView imageView, View view, Activity activity) {
+        setImage(imageView, false);
+
         ((TextView) view.findViewById(R.id.genresName)).setText(name);
 
         GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TR_BL, new int[]{color, Color.WHITE});
         ((ImageView) view.findViewById(R.id.cardViewBackground)).setImageDrawable(gradientDrawable);
         ((ImageView) view.findViewById(R.id.cardViewBackground)).setAlpha(0.3F);
-    }
 
-    @Override
-    public void onClick(View view, Activity activity) {
+        CardView cardView = (CardView) view.findViewById(R.id.card_view);
+        if (cardView != null)
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            });
+
 
     }
 }

@@ -1,38 +1,35 @@
 package ru.lionzxy.yandexmusic;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.balysv.materialmenu.MaterialMenuDrawable;
-import com.balysv.materialmenu.MaterialMenuIcon;
 import com.balysv.materialmenu.MaterialMenuView;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.Drawer.OnDrawerListener;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.MiniDrawerItem;
+import com.mikepenz.materialdrawer.interfaces.OnCheckedChangeListener;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.SwitchDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
@@ -42,18 +39,26 @@ import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import ru.lionzxy.yandexmusic.animations.ResizeAnimation;
 import ru.lionzxy.yandexmusic.collections.recyclerviews.LockableRecyclerView;
 import ru.lionzxy.yandexmusic.collections.recyclerviews.RecyclerViewAdapter;
+import ru.lionzxy.yandexmusic.dialogs.GenresDialog;
 import ru.lionzxy.yandexmusic.exceptions.ContextDialogException;
 import ru.lionzxy.yandexmusic.helper.PixelHelper;
-import ru.lionzxy.yandexmusic.interfaces.IListElement;
 import ru.lionzxy.yandexmusic.io.ImageResource;
+import ru.lionzxy.yandexmusic.model.AuthorObject;
+import ru.lionzxy.yandexmusic.model.GenresObject;
+import ru.lionzxy.yandexmusic.sorting.filters.Filters;
+import ru.lionzxy.yandexmusic.sorting.filters.MultiFilter;
 
-public class MusicList extends AppCompatActivity implements View.OnClickListener, OnDrawerListener {
+public class MusicList extends AppCompatActivity implements View.OnClickListener, Drawer.OnDrawerItemClickListener, OnDrawerListener {
+
     public boolean ready = false;
     private MaterialMenuView materialMenu;
     private TextView textView;
     private SearchView searchView;
+
     private byte actionBarMenuState = 0;
     private Drawer navigationDrawer;
+    private MultiFilter multiFilter = new MultiFilter();
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -111,14 +116,34 @@ public class MusicList extends AppCompatActivity implements View.OnClickListener
                                     .withIcon(R.drawable.ic_autorenew_black_24dp),
                             new SwitchDrawerItem() //Только те, у которых есть сайт
                                     .withName(R.string.drawer_sorting_only_website)
-                                    .withIcon(R.drawable.internetlogo),
+                                    .withIcon(R.drawable.internetlogo)
+                                    .withOnCheckedChangeListener(new OnCheckedChangeListener() {
+                                        @Override
+                                        public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
+                                            if (((SwitchDrawerItem) drawerItem).isSwitchEnabled())
+                                                multiFilter.addFilter(Filters.onlyWithSite);
+                                            else multiFilter.removeFilter(Filters.onlyWithSite);
+                                            refreshList();
+                                        }
+                                    }),
                             new SwitchDrawerItem() //Только те, у которых есть большое изображение
                                     .withName(R.string.drawer_sorting_only_big_picture)
-                                    .withIcon(R.drawable.ic_crop_original_black_24dp),
+                                    .withIcon(R.drawable.ic_crop_original_black_24dp)
+                                    .withOnCheckedChangeListener(new OnCheckedChangeListener() {
+                                        @Override
+                                        public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
+                                            if (isChecked)
+                                                multiFilter.addFilter(Filters.onlyWithBigPicture);
+                                            else
+                                                multiFilter.removeFilter(Filters.onlyWithBigPicture);
+                                            refreshList();
+                                        }
+                                    }),
                             new PrimaryDrawerItem() //По нажатию на кнопку открывается выбор жанров
                                     .withName(R.string.drawer_sorting_custom_genres)
                                     .withIcon(R.drawable.ic_recent_actors_black_24dp)
                     )
+                    .withOnDrawerItemClickListener(this)
                     .withOnDrawerListener(this)
                     .withHeader(R.layout.drawer_header).build();
         } catch (Exception e) {
@@ -128,32 +153,15 @@ public class MusicList extends AppCompatActivity implements View.OnClickListener
         if (LoadingActivity.authorObjects == null) {
             Intent intent = new Intent(this, LoadingActivity.class);
             startActivityForResult(intent, 1);
-        } else loadList();
+        } else refreshList();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
-            loadList();
+            refreshList();
         else new ContextDialogException(MusicList.this, new Exception());
-    }
-
-    public void loadList() {//Set up recyclerlist
-
-        LockableRecyclerView mRecyclerView;
-        try {
-            mRecyclerView = (LockableRecyclerView) findViewById(R.id.recyclerview);
-            mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            mRecyclerView.setAdapter(new AlphaInAnimationAdapter(new RecyclerViewAdapter(MusicList.this, new ArrayList<IListElement>(LoadingActivity.authorObjects), R.layout.authorcard)));
-
-            checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.INTERNET");
-
-            ready = true;
-        } catch (Exception e) {
-            new ContextDialogException(this, e);
-        }
     }
 
     @Override
@@ -237,5 +245,55 @@ public class MusicList extends AppCompatActivity implements View.OnClickListener
     public void onDrawerSlide(View drawerView, float slideOffset) {
         if (actionBarMenuState == 0)
             materialMenu.setTransformationOffset(MaterialMenuDrawable.AnimationState.BURGER_ARROW, slideOffset);
+    }
+
+    @Override
+    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+        switch (position) {
+            case 8: {
+                new GenresDialog().show(getSupportFragmentManager(), "genresDialog");
+                return false;
+            }
+            default:
+                Toast.makeText(MusicList.this, "Position: " + position + " View: " + view + " DrawerItem:" + drawerItem.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+        return true;
+    }
+
+    public void loadList(List<AuthorObject> authorObjects) {//Set up recyclerlist
+        LockableRecyclerView mRecyclerView;
+        try {
+            mRecyclerView = (LockableRecyclerView) findViewById(R.id.recyclerview);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            mRecyclerView.setAdapter(new AlphaInAnimationAdapter(new RecyclerViewAdapter<AuthorObject>(MusicList.this, authorObjects, R.layout.listelement_authorcard)));
+
+            checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.INTERNET");
+
+            ready = true;
+        } catch (Exception e) {
+            new ContextDialogException(this, e);
+        }
+    }
+
+    public void refreshList() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final List<AuthorObject> authorObjects = new ArrayList<AuthorObject>();
+
+                for (int i = 0; i < LoadingActivity.authorObjects.size(); i++)
+                    if (multiFilter.isAccept(LoadingActivity.authorObjects.get(i)))
+                        authorObjects.add(LoadingActivity.authorObjects.get(i));
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadList(authorObjects);
+                    }
+                });
+            }
+        }).start();
     }
 }

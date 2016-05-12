@@ -13,8 +13,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.AuthorObject;
-import ru.lionzxy.yandexmusic.collections.recyclerviews.elements.GenresObject;
+import ru.lionzxy.yandexmusic.model.AuthorObject;
+import ru.lionzxy.yandexmusic.model.GenresObject;
 import ru.lionzxy.yandexmusic.helper.DatabaseHelper;
 
 /**
